@@ -1,0 +1,10 @@
+
+docker image build --rm --no-cache -t test-image:v1 .
+docker run -p 3000:3000 --name test-container1 --rm -it test-image:v1 /bin/bash
+
+docker image build --rm -t test-image:v1 .
+docker run -p 3000:3000 --name test-container1 --rm -it test-image:v1 /bin/bash
+
+docker run --name test-container1 -it test-image:v1 /bin/bash
+
+docker create --name test-container1

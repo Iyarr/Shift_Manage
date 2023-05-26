@@ -9,6 +9,6 @@ COPY ./javascript-starter ./javascript-starter
 
 WORKDIR /home/javascript-starter
 
-RUN npm install && \
-    npm install -g npm@9.6.7 && \
+RUN npm i && \
+    npm i -g npm@9.6.7 && \
     npm i -g @nestjs/cli
