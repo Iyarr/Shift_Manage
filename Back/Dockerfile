@@ -5,10 +5,10 @@ RUN apt-get update && \
 
 WORKDIR /home
 
-COPY ./javascript-starter ./javascript-starter
+COPY ./api ./api
 
-WORKDIR /home/javascript-starter
+WORKDIR /home/api
 
 RUN npm i && \
     npm i -g npm@9.6.7 && \
-    npm i -g @nestjs/cli
+    npm i @nestjs/cli
