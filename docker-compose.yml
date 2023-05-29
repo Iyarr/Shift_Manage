@@ -1,19 +1,21 @@
-version: '3.7'
+version: '3.8'
 services:
 
   backend:
-    build: ./back
+    build: back
     container_name: "nestjs"
     privileged: true
+    tty: true
     depends_on:
       - dynamodb-local
 
   frontend:
-    build: ./front
+    build: front
     container_name: "react"
     privileged: true
+    tty: true
     depends_on:
-      - dynamodb-local
+      - backend
 
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
