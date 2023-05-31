@@ -1,15 +1,19 @@
 
 body {
   background-color: aquamarine;
-}
-
-.login {
   position: absolute; 
   top: 50%; 
   left: 50%; 
   transform: translate(-50%, -50%);
-  width: 50%;
-  background-color: aliceblue;
+  font-size: 2vw;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+.login {
+  background-color:khaki;
   text-align:center;
   display: grid;
   place-items: center;

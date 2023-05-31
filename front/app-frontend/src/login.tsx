@@ -19,7 +19,7 @@ class Login extends React.Component {
             </div>
             <input type="button" value="ログイン" className="button"/>
           </form>
-          <p>パスワードを忘れた</p>
+          <p>パスワード忘れた...</p>
         </div>
     );}
 }
