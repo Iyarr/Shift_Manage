@@ -1,29 +1,54 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
-import Login from './login'
-import Shift from './shift'
-import User from './user'
-import Manage from './manage'
 
-function App() {
+import Header from './header'
+import Body from './body'
 
-  return (
-  < div className="app">
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/shift" element={<Shift/>} />
-        <Route path="/user" element={<User/>} />
-        <Route path="/manage" element={<Manage/>} />
-      </Routes>
-    </Router>
-  </ div>
-  );
+// "Public" | "Setting" | "Regular" | "MyShift"
+type Modes = "Login" | "ShiftList" | "ShiftSet" | "Regular"| "MyShift"| "User" | "Manage"
 
+type ModesToVoid = (To:Modes) => void
+
+type AppState = {
+  mode: Modes
+  ChangeMode: ModesToVoid
+};
+
+class App extends React.Component<{},AppState> {
+  constructor(props:{}) {
+    super(props);
+    this.state = {
+      mode: "Login",
+      ChangeMode: this.ChangeMode
+    };
+  };
+
+  ChangeMode(To:Modes) {
+    this.setState({
+      mode: To
+    });
   }
+
+  render() {
+    
+    return(
+      <div className="app">
+        <header>
+        {
+          this.state.mode in ["Login","Manage"]
+            ? <></>
+            : <Header
+                ChangeMode={this.ChangeMode}
+              />
+        }
+        </header>
+        <body>
+          <Body
+            mode={this.state.mode}
+          />
+        </body>
+      </div>
+    );
+  }
+}
 
 export default App;
