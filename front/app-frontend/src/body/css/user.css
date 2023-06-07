@@ -14,13 +14,13 @@
   font-size: 3em;
 }
 
-.buttonList {
+.UserSet buttonList {
   flex-direction: column;
   align-items: center;
   display: flex;
 }
 
-input[type="button"] {
+.UserSet input[type="button"] {
   background-color:chartreuse;
   font-size: 1.5em;
   width: 60%;

@@ -1,54 +1,25 @@
-import React from 'react';
+import { useState } from 'react';
 
 import Header from './header'
 import Body from './body'
 
-// "Public" | "Setting" | "Regular" | "MyShift"
-type Modes = "Login" | "ShiftList" | "ShiftSet" | "Regular"| "MyShift"| "User" | "Manage"
+function App() {
+  const [mode, setMode] = useState<string>("User")
 
-type ModesToVoid = (To:Modes) => void
-
-type AppState = {
-  mode: Modes
-  ChangeMode: ModesToVoid
-};
-
-class App extends React.Component<{},AppState> {
-  constructor(props:{}) {
-    super(props);
-    this.state = {
-      mode: "Login",
-      ChangeMode: this.ChangeMode
-    };
-  };
-
-  ChangeMode(To:Modes) {
-    this.setState({
-      mode: To
-    });
-  }
-
-  render() {
-    
-    return(
-      <div className="app">
-        <header>
-        {
-          this.state.mode in ["Login","Manage"]
-            ? <></>
-            : <Header
-                ChangeMode={this.ChangeMode}
-              />
-        }
-        </header>
-        <body>
-          <Body
-            mode={this.state.mode}
-          />
-        </body>
-      </div>
-    );
-  }
+  return(
+    <div className="app">
+      {
+        (() => {
+          if ( mode !== "Login" && mode !== "Manage" ) {
+            return <Header setMode={setMode}/>;
+          }
+        })()
+      }
+      <Body
+        mode={mode}
+      />
+    </div>
+  );
 }
 
 export default App;

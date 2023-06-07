@@ -1,4 +1,3 @@
-import React from 'react';
 
 import Login from './body/login'
 import ShiftList from './body/shift/shiftlist'
@@ -8,45 +7,26 @@ import MyShift from './body/shift/myshift'
 import User from './body/user'
 import Manage from './body/manage'
 
-type Modes = "Login" | "ShiftList" | "ShiftSet" | "Regular"| "MyShift"| "User" | "Manage"
-
 interface DirectionArray {
   [index: string]: JSX.Element
 }
 
 type BodyProps = {
-  mode: Modes
+  mode: string
 };
 
-type State = {
-    mode: Modes
-    elements: DirectionArray
-};
-
-class Body extends React.Component<BodyProps,State> {
-  constructor(props: BodyProps) {
-    super(props);
-    this.state = {
-      mode: props.mode,
-      elements: {
-        Login:<Login/>,
-        ShiftList:<ShiftList/>,
-        ShiftSet:<ShiftSet/>,
-        Regular:<Regular/>,
-        MyShift:<MyShift/>,
-        User:<User/>,
-        Manage:<Manage/>
-      }
-    };
-  };
-
-  render() {
-    return(
-      <div className="BodyClass">
-        {this.state.elements[this.state.mode]}
-      </div>
-    );
+function Body(props:BodyProps) {
+  const elements:DirectionArray = {
+    Login:<Login/>,
+    ShiftList:<ShiftList/>,
+    ShiftSet:<ShiftSet/>,
+    Regular:<Regular/>,
+    MyShift:<MyShift/>,
+    User:<User/>,
+    Manage:<Manage/>
   }
+
+  return (<div className="body">{elements[props.mode]}</div>);
 }
 
 export default Body;

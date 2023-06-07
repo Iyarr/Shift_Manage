@@ -1,27 +1,39 @@
 import React from 'react';
 
-type Modes = "Login" | "ShiftList" | "ShiftSet" | "Regular"| "MyShift"| "User" | "Manage"
+type StringToVoid = (To:string) => void
 
-type ModesToVoid = (To:Modes) => void
-
-type ModeSet = {
-  ChangeMode: ModesToVoid
+type HeaderState = {
+  setMode: StringToVoid
 };
 
-class Header extends React.Component<ModeSet,ModeSet> {
-  constructor(props: ModeSet) {
-    super(props);
-    this.state = {
-      ChangeMode: props.ChangeMode
-    };
-  };
-  render() {
-    
-    return(
-      <div className="header">
-      </div>
-    );
+interface button {
+  name: string;
+  value: string;
+}
+
+function Header(props:HeaderState) {
+  const Buttons: button[] = [
+    { "name":"ShiftList", "value":"公開シフト" },
+    { "name":"ShiftSet", "value":"シフト設定" },
+    { "name":"Regular", "value":"固定シフト" },
+    { "name":"MyShift", "value":"マイシフト" },
+    { "name":"User", "value":"ユーザー" }
+  ];
+
+  const ButtonClick:React.MouseEventHandler<HTMLButtonElement> = (event) =>
+  {
+    props.setMode(event.currentTarget.className)
   }
+
+  return(
+    <div className="header">
+      {Buttons.map((Button) =>(
+        <button className={Button["name"]} onClick={ButtonClick} key={Button["name"]}>
+          {Button["value"]}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 export default Header;
