@@ -1,16 +1,12 @@
 import React from 'react';
+import CalenderComponent from './calender'
 
 
-class ShiftSet extends React.Component {
-    constructor(props: {}) {
-        super(props);
-    };
-
-    render() {
-        return(
-          <div className="shiftset">
-          </div>
-        );
-    }
+function ShiftSet() {
+    return(
+      <div className="shiftset">
+        <CalenderComponent/>
+      </div>
+    );
 }
 export default ShiftSet;

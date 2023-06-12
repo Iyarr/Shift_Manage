@@ -1,17 +1,11 @@
 import React from 'react';
+import CalenderComponent from './calender'
 
-
-class ShiftList extends React.Component {
-    constructor(props: {}) {
-        super(props);
-    };
-
-    render() {
-        return(
-          <div className="shiftlist">
-          </div>
-        );
-    }
+function ShiftList() {
+  return(
+    <div className="shiftlist">
+    </div>
+  );
 }
 export default ShiftList;
 

@@ -1,16 +1,10 @@
 import React from 'react';
+import CalenderComponent from './calender'
 
-
-class Regular extends React.Component {
-    constructor(props: {}) {
-        super(props);
-    };
-
-    render() {
-        return(
-          <div className="regular">
-          </div>
-        );
-    }
+function Regular() {
+    return(
+      <div className="regular">
+      </div>
+    );
 }
 export default Regular;

@@ -1,16 +1,11 @@
 import React from 'react';
+import CalenderComponent from './calender'
 
 
-class MyShift extends React.Component {
-    constructor(props: {}) {
-        super(props);
-    };
-
-    render() {
-        return(
-          <div className="myshift">
-          </div>
-        );
-    }
+function MyShift() {
+    return(
+      <div className="myshift">
+      </div>
+    );
 }
 export default MyShift;

@@ -4,7 +4,7 @@ import Header from './header'
 import Body from './body'
 
 function App() {
-  const [mode, setMode] = useState<string>("User")
+  const [mode, setMode] = useState<string>("ShiftSet")
 
   return(
     <div className="app">
