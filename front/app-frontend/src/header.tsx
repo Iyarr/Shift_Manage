@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-type StringToVoid = (To:string) => void
+type StringToVoid = (To: string) => void;
 
 type HeaderState = {
-  setMode: StringToVoid
+  setMode: StringToVoid;
 };
 
 interface button {
@@ -11,24 +11,26 @@ interface button {
   value: string;
 }
 
-function Header(props:HeaderState) {
+function Header(props: HeaderState) {
   const Buttons: button[] = [
-    { "name":"ShiftList", "value":"公開シフト" },
-    { "name":"ShiftSet", "value":"シフト設定" },
-    { "name":"Regular", "value":"固定シフト" },
-    { "name":"MyShift", "value":"マイシフト" },
-    { "name":"User", "value":"ユーザー" }
+    { name: "ShiftList", value: "公開シフト" },
+    { name: "ShiftSet", value: "シフト設定" },
+    { name: "Regular", value: "固定シフト" },
+    { name: "User", value: "ユーザー" },
   ];
 
-  const ButtonClick:React.MouseEventHandler<HTMLButtonElement> = (event) =>
-  {
-    props.setMode(event.currentTarget.className)
-  }
+  const ButtonClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    props.setMode(event.currentTarget.className);
+  };
 
-  return(
+  return (
     <div className="header">
-      {Buttons.map((Button) =>(
-        <button className={Button["name"]} onClick={ButtonClick} key={Button["name"]}>
+      {Buttons.map((Button) => (
+        <button
+          className={Button["name"]}
+          onClick={ButtonClick}
+          key={Button["name"]}
+        >
           {Button["value"]}
         </button>
       ))}
