@@ -21,7 +21,7 @@ function CalenderComponent(props: Options) {
   //const views = ["dayGridWeek", "dayGridMonth"]
   //const [count, setCount] = useState<number>(0)
   const calendarRef = useRef<FullCalendar>(null);
-  const partition = ["X", "Y", "Z", "A", "B", "C", "D"];
+  const parts = ["X", "Y", "Z", "A", "B", "C", "D"];
 
   const calendarOptions = {
     ref: calendarRef,
@@ -33,31 +33,16 @@ function CalenderComponent(props: Options) {
     slotDuration: { hours: 1 },
     slotLabelContent: (arg: SlotLabelContentArg) => {
       const num = Number(arg.text[0]);
-      return partition[num];
+      return parts[num];
     },
-    /*
-    slotLaneContent: (arg: SlotLaneContentArg): JSX.Element => {
-      return (
-        <div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-        </div>
-      );
-    },
-    */
     dayCellContent: (arg: DayCellContentArg): JSX.Element => {
       return (
         <div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
-          <div>some html</div>
+          {parts.map((part, index) => (
+            <div key={index}>
+              {arg.date.toLocaleDateString().replaceAll("/", "-") + ">" + part}
+            </div>
+          ))}
         </div>
       );
     },
@@ -91,7 +76,3 @@ function CalenderComponent(props: Options) {
   );
 }
 export default CalenderComponent;
-
-function TimeCellContent() {
-  return;
-}
