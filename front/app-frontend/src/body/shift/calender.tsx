@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import styled from "styled-components";
 import { Calendar, ToolbarInput, CustomButtonInput } from "@fullcalendar/core";
 import {
   SlotLabelContentArg,
@@ -22,6 +23,12 @@ function CalenderComponent(props: Options) {
   //const [count, setCount] = useState<number>(0)
   const calendarRef = useRef<FullCalendar>(null);
   const parts = ["X", "Y", "Z", "A", "B", "C", "D"];
+
+  const StyledFullCalendar = styled(FullCalendar)`
+    .body {
+      background-color: #f2f2f2;
+    }
+  `;
 
   const calendarOptions = {
     ref: calendarRef,
@@ -71,7 +78,7 @@ function CalenderComponent(props: Options) {
   };
   return (
     <div className="calender">
-      <FullCalendar {...Object.assign(calendarOptions, { ...props })} />
+      <StyledFullCalendar {...Object.assign(calendarOptions, { ...props })} />
     </div>
   );
 }
