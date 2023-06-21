@@ -1,7 +1,7 @@
 import Login from "./body/login";
-import ShiftList from "./body/shift/shiftlist";
-import ShiftSet from "./body/shift/shiftset";
-import Regular from "./body/shift/regular";
+import ShiftList from "./body/shiftlist";
+import ShiftSet from "./body/shiftset";
+import Regular from "./body/regular";
 import User from "./body/user";
 import Manage from "./body/manage";
 
