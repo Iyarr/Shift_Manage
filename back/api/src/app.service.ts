@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import AWS from 'aws-sdk';
 
 type userSec = {
   username: string;
