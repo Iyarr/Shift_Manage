@@ -147,6 +147,7 @@
 
     ```js
     {
+      "display_name": "大谷"
       "name": "newohtani"
       "password": "ohtani_pass"
     }
