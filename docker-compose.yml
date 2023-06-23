@@ -5,6 +5,11 @@ services:
     container_name: "nestjs"
     privileged: true
     tty: true
+    environment:
+      - aws_access_key_id=${MY_KEY_ID}
+      - aws_secret_access_key=${SECRET_KEY}
+    env_file:
+      - .env
 
   frontend:
     build: front

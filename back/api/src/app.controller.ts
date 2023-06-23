@@ -10,6 +10,7 @@ import {
   Headers,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 
 type userSec = {
   username: string;
@@ -25,6 +26,7 @@ type userInfo = {
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+  private dynamoDBClient: DynamoDBClient;
 
   @Get()
   getHello(): string {

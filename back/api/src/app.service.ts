@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBProvider } from './dynamodb';
 
 type userSec = {
   username: string;
@@ -14,6 +15,13 @@ type userInfo = {
 
 @Injectable()
 export class AppService {
+  constructor(private dynamoDBProvider: DynamoDBProvider) {}
+
+  someMethod(): void {
+    const dynamoDBClient: DynamoDBClient = this.dynamoDBProvider.getClient();
+    // DynamoDBクライアントを使用して処理を実行
+  }
+
   getHello(): string {
     return 'Hello World!';
   }
