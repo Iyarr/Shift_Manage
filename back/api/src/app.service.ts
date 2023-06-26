@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBProvider } from './dynamodb';
 
 type userSec = {
   username: string;
@@ -14,19 +13,8 @@ type userInfo = {
 };
 
 @Injectable()
-export class AppService {
-  constructor(private dynamoDBProvider: DynamoDBProvider) {}
-
-  someMethod(): void {
-    const dynamoDBClient: DynamoDBClient = this.dynamoDBProvider.getClient();
-    // DynamoDBクライアントを使用して処理を実行
-  }
-
-  getHello(): string {
-    return 'Hello World!';
-  }
-
-  getShift(date: string): JSON {
+export class ShiftService {
+  getShift(date: string, DynamodbClient: DynamoDBClient): JSON {
     const result = [
       {
         date: '2023-01-01',
@@ -56,7 +44,20 @@ export class AppService {
     return JSON.parse(JSON.stringify(result));
   }
 
-  postAuth(user: userSec): JSON {
+  patchShift(data: JSON, DynamodbClient: DynamoDBClient): JSON {
+    const result = {
+      update: {
+        result: true,
+      },
+    };
+
+    return JSON.parse(JSON.stringify(result));
+  }
+}
+
+@Injectable()
+export class UserService {
+  postAuth(user: userSec, DynamodbClient: DynamoDBClient): JSON {
     const result = {
       result: true,
       is_manager: false,
@@ -66,17 +67,7 @@ export class AppService {
     return JSON.parse(JSON.stringify(result));
   }
 
-  postUser(user: userInfo): JSON {
-    const result = {
-      update: {
-        result: true,
-      },
-    };
-
-    return JSON.parse(JSON.stringify(result));
-  }
-
-  patchShift(data: JSON): JSON {
+  postUser(user: userInfo, DynamodbClient: DynamoDBClient): JSON {
     const result = {
       update: {
         result: true,
