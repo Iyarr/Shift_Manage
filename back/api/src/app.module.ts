@@ -1,17 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { DynamoDBProvider } from './dynamodb';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+import { ShiftModule } from './shift/shift.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
-      expandVariables: true,
-    }),
-  ],
-  controllers: [AppController, ConfigService],
-  providers: [ConfigService, DynamoDBProvider],
+  imports: [UserModule, ShiftModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

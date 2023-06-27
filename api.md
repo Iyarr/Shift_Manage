@@ -1,49 +1,5 @@
 # api の設計
 
-## 認証トークン取得
-
-- エンドポイント
-
-  - POST `/api/auth/token`
-
-- Request
-
-  - Content-Type:application/json
-  - Body
-
-    ```js
-    {
-      "name": "ohtani"
-      "password": "ohtani_pass"
-    }
-    ```
-
-- Response 200 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "auth": {
-      "result": true,
-      "is_manager": false,
-      "false_count": 0
-    }
-  }
-  ```
-
-- Response 404 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "auth": {
-      "result": false
-    }
-  }
-  ```
-
 ## 公開シフト取得[/api/shift]
 
 ### シフト一覧表示
@@ -132,6 +88,50 @@
   ```
 
 ## ユーザー [/user]
+
+### 認証トークン取得
+
+- エンドポイント
+
+  - POST `/api/auth`
+
+- Request
+
+  - Content-Type:application/json
+  - Body
+
+    ```js
+    {
+      "name": "ohtani"
+      "password": "ohtani_pass"
+    }
+    ```
+
+- Response 200 (application/json)
+
+  - Content-Type:application/json
+
+  ```json
+  {
+    "auth": {
+      "result": true,
+      "is_manager": false,
+      "false_count": 0
+    }
+  }
+  ```
+
+- Response 404 (application/json)
+
+  - Content-Type:application/json
+
+  ```json
+  {
+    "auth": {
+      "result": false
+    }
+  }
+  ```
 
 ### 個人データ更新
 
