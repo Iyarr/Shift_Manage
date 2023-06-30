@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { DynamoDBClient, ScanCommand } from '@aws-sdk/client-dynamodb';
+import {
+  DynamoDBClient,
+  ScanCommand,
+  CreateTableCommand,
+} from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import { ConfigService } from '@nestjs/config';
 
@@ -8,9 +12,9 @@ export class ClientService {
   private dynamoDBClient: DynamoDBClient;
   private dynamoDBDocClient: DynamoDBDocumentClient;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(private configService: ConfigService) {
     this.dynamoDBClient = new DynamoDBClient({
-      region: 'ap-southeast-2',
+      region: 'ap-northeast-1',
       credentials: {
         accessKeyId: this.configService.get<string>('AWS_ACCESS_KEY_ID'),
         secretAccessKey: this.configService.get<string>(
@@ -23,5 +27,44 @@ export class ClientService {
 
   getClient(): DynamoDBClient {
     return this.dynamoDBClient;
+  }
+
+  testQuery() {
+    const query = async (): Promise<string> => {
+      const command = new ScanCommand({ TableName: 'Shift' });
+      const response = await this.dynamoDBClient.send(command);
+      return JSON.stringify(response);
+    };
+    return query();
+  }
+
+  addtable() {
+    const createTable = async () => {
+      try {
+        const command = new CreateTableCommand({
+          TableName: 'Games', // テーブル名
+          KeySchema: [
+            { AttributeName: 'Hardware', KeyType: 'HASH' }, // パーティションキー
+            { AttributeName: 'GameId', KeyType: 'RANGE' }, // ソートキー
+          ],
+          AttributeDefinitions: [
+            { AttributeName: 'Hardware', AttributeType: 'S' }, // 文字列属性
+            { AttributeName: 'GameId', AttributeType: 'S' }, // 文字列属性
+          ],
+          ProvisionedThroughput: {
+            ReadCapacityUnits: 1,
+            WriteCapacityUnits: 1,
+          },
+          StreamSpecification: {
+            StreamEnabled: false,
+          },
+        });
+        return JSON.stringify(await this.dynamoDBClient.send(command), null, 2);
+      } catch (err) {
+        console.error('ERROR', err);
+        return typeof err;
+      }
+    };
+    return createTable();
   }
 }

@@ -1,10 +1,11 @@
 import { Module, Global } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientService } from './client/client.service';
+import { TestqueryController } from './testquery/testquery.controller';
 
-@Global()
 @Module({
-  imports: [ConfigModule.forRoot()],
-  providers: [ClientService],
+  imports: [ConfigModule],
+  controllers: [TestqueryController],
+  providers: [ClientService, ConfigService],
 })
 export class DynamodbModule {}
