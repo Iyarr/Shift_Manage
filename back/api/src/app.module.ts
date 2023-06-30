@@ -4,10 +4,9 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ShiftModule } from './shift/shift.module';
 import { DynamodbModule } from './dynamodb/dynamodb.module';
-import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UserModule, ShiftModule, DynamodbModule, ConfigModule.forRoot()],
+  imports: [UserModule, ShiftModule, DynamodbModule],
   controllers: [AppController],
   providers: [AppService],
 })
