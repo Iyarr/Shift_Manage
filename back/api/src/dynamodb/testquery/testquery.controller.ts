@@ -9,6 +9,6 @@ export class TestqueryController {
 
   @Get()
   async getHello(): Promise<string> {
-    return this.ClientService.addtable();
+    return this.ClientService.testQuery();
   }
 }

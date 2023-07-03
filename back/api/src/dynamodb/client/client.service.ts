@@ -4,7 +4,7 @@ import {
   ScanCommand,
   CreateTableCommand,
 } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
 @Injectable()
@@ -30,14 +30,26 @@ export class ClientService {
 
   testQuery() {
     const query = async (): Promise<string> => {
-      const command = new ScanCommand({ TableName: 'Shift' });
-      const response = await this.dynamoDBClient.send(command);
-      return JSON.stringify(response);
+      try {
+        const command = new GetCommand({
+          TableName: 'Shift',
+          Key: {
+            id: 0,
+            partition: '*',
+          },
+        });
+        const response = await this.dynamoDBDocClient.send(command);
+        return JSON.stringify(response);
+      } catch (response) {
+        console.error('ERROR', response);
+        return JSON.stringify(response);
+      }
     };
     return query();
   }
 
   addtable() {
+    //Error出る
     const createTable = async () => {
       try {
         const command = new CreateTableCommand({
