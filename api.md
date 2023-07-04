@@ -10,6 +10,11 @@
 
     date：表示する週の月曜日の日にち
 
+- Request
+
+  - header
+    - Cookie
+
 - Response 200 (application/json)
 
   - Content-Type:application/json
@@ -54,7 +59,9 @@
 
 - Request
 
-  - Content-Type:application/json
+  - header
+    - Content-Type:application/json
+    - Cookie
 
   - Body
 
@@ -97,7 +104,8 @@
 
 - Request
 
-  - Content-Type:application/json
+  - header
+
   - Body
 
     ```js
@@ -109,14 +117,19 @@
 
 - Response 200 (application/json)
 
-  - Content-Type:application/json
-
+- ### Set-Cookie
+  >
+  > - sessionId="乱数"
+  > - path="フロントエンドのFQDN"
+  > - secure; HttpOnly
+  
   ```json
   {
     "auth": {
       "result": true,
       "is_manager": false,
       "false_count": 0
+
     }
   }
   ```
@@ -142,6 +155,10 @@
 - Request
 
   username：取得したいユーザー名
+
+  - header
+    - Content-Type:application/json
+    - Cookie
 
   - Body
 
