@@ -2,7 +2,11 @@
 
 ## サイトからの資料
 
-- [DynamoDB の仕組みの解説](https://www.sbbit.jp/article/cont1/95515#head1)
+- ### [DynamoDB の仕組みの解説](https://www.sbbit.jp/article/cont1/95515#head1)
+
+## [公式ドキュメント](https://docs.aws.amazon.com/ja_jp/dynamodb/?icmpid=docs_homepage_featuredsvcs)
+
+- ### [aws-sdk-lib-dynamodb](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-lib-dynamodb/)
 
 ## 設計で考慮すること
 
