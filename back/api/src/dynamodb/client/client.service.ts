@@ -4,7 +4,11 @@ import {
   ScanCommand,
   CreateTableCommand,
 } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand } from '@aws-sdk/lib-dynamodb';
+import {
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+} from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
 @Injectable()
@@ -34,8 +38,8 @@ export class ClientService {
         const command = new GetCommand({
           TableName: 'Shift',
           Key: {
-            id: 0,
-            partition: '*',
+            id: 2,
+            partition: '2023-06-29-C',
           },
         });
         const response = await this.dynamoDBDocClient.send(command);
@@ -48,34 +52,24 @@ export class ClientService {
     return query();
   }
 
-  addtable() {
+  addrow() {
     //Error出る
-    const createTable = async () => {
+    const query = async (): Promise<string> => {
       try {
-        const command = new CreateTableCommand({
-          TableName: 'Games', // テーブル名
-          KeySchema: [
-            { AttributeName: 'Hardware', KeyType: 'HASH' }, // パーティションキー
-            { AttributeName: 'GameId', KeyType: 'RANGE' }, // ソートキー
-          ],
-          AttributeDefinitions: [
-            { AttributeName: 'Hardware', AttributeType: 'S' }, // 文字列属性
-            { AttributeName: 'GameId', AttributeType: 'S' }, // 文字列属性
-          ],
-          ProvisionedThroughput: {
-            ReadCapacityUnits: 1,
-            WriteCapacityUnits: 1,
-          },
-          StreamSpecification: {
-            StreamEnabled: false,
+        const command = new PutCommand({
+          TableName: 'Shifts',
+          Item: {
+            partition: '2023-06-29-C',
+            userID: 2,
           },
         });
-        return JSON.stringify(await this.dynamoDBClient.send(command), null, 2);
-      } catch (err) {
-        console.error('ERROR', err);
-        return typeof err;
+        const response = await this.dynamoDBDocClient.send(command);
+        return JSON.stringify(response);
+      } catch (response) {
+        console.error('ERROR', response);
+        return JSON.stringify(response);
       }
     };
-    return createTable();
+    return query();
   }
 }
