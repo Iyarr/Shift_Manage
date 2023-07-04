@@ -11,4 +11,9 @@ export class TestqueryController {
   async getHello(): Promise<string> {
     return this.ClientService.testQuery();
   }
+
+  @Get('add')
+  async addShift(): Promise<string> {
+    return this.ClientService.addShift();
+  }
 }

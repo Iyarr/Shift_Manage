@@ -42,6 +42,14 @@ export class ClientService {
             partition: '2023-06-29-C',
           },
         });
+        const multipleItemCommand = new GetCommand({
+          TableName: 'Shift',
+          Key: {
+            id: 2,
+            partition: '2023-06-29-C',
+          },
+          ProjectionExpression: ``,
+        });
         const response = await this.dynamoDBDocClient.send(command);
         return JSON.stringify(response);
       } catch (response) {
@@ -52,8 +60,7 @@ export class ClientService {
     return query();
   }
 
-  addrow() {
-    //Error出る
+  addShift() {
     const query = async (): Promise<string> => {
       try {
         const command = new PutCommand({
