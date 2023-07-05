@@ -8,9 +8,14 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  BatchGetCommand,
 } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
+interface Shift {
+  id: number;
+  partition: string;
+}
 @Injectable()
 export class ClientService {
   private dynamoDBClient: DynamoDBClient;
@@ -32,25 +37,39 @@ export class ClientService {
     return this.dynamoDBClient;
   }
 
-  testQuery() {
+  testQuery(Id: number, Partition: string) {
     const query = async (): Promise<string> => {
       try {
         const command = new GetCommand({
+          // Omit<__GetItemCommandInput, "Key">
           TableName: 'Shift',
+          // Key: Record<string, NativeAttributeValue>
           Key: {
-            id: 2,
-            partition: '2023-06-29-C',
+            id: Id,
+            partition: Partition,
           },
         });
-        const multipleItemCommand = new GetCommand({
-          TableName: 'Shift',
-          Key: {
-            id: 2,
-            partition: '2023-06-29-C',
+        const key = {
+          key: { id: 2, partition: '2023-06-29-C' },
+        };
+        const multipleItemCommand = new BatchGetCommand({
+          RequestItems: {
+            Shift: {
+              Keys: [
+                { id: 1, partition: '2023-06-29-C' },
+                { id: 0, partition: '2023-06-29-C' },
+              ],
+            },
+            Shifts: {
+              Keys: [
+                { userID: 1, partition: '2023-06-29-C' },
+                { userID: 0, partition: '2023-06-29-C' },
+              ],
+            },
           },
-          ProjectionExpression: ``,
         });
-        const response = await this.dynamoDBDocClient.send(command);
+        const response = await this.dynamoDBDocClient.send(multipleItemCommand);
+        console.log(response);
         return JSON.stringify(response);
       } catch (response) {
         console.error('ERROR', response);

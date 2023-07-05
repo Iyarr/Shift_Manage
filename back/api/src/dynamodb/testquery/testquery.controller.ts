@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ClientService } from '../client/client.service';
 
 @Controller('testquery')
@@ -7,9 +7,9 @@ export class TestqueryController {
     this.ClientService = ClientService;
   }
 
-  @Get()
-  async getHello(): Promise<string> {
-    return this.ClientService.testQuery();
+  @Get(':id/:partition')
+  async getHello(@Param() params): Promise<string> {
+    return this.ClientService.testQuery(Number(params.id), params.partition);
   }
 
   @Get('add')
