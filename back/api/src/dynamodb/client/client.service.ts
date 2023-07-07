@@ -9,6 +9,27 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
+type Item = {
+  partition: string;
+  userId: number;
+};
+type ShiftDto = {
+  item: Item;
+  opera: 'del' | 'up';
+};
+
+type userDto = {
+  Item: userItem;
+  opera: 'del' | 'up';
+};
+type userItem = {
+  id: string;
+  userName: string;
+  displayName: string;
+  password: string;
+  iaManager: string;
+};
+
 @Injectable()
 export class ClientService {
   private dynamoDBClient: DynamoDBClient;
@@ -31,42 +52,23 @@ export class ClientService {
   }
 
   testQuery(Id: number, Partition: string) {
-    const query = async (): Promise<string> => {
-      try {
-        const command = new GetCommand({
-          // Omit<__GetItemCommandInput, "Key">
-          TableName: 'Shift',
-          // Key: Record<string, NativeAttributeValue>
-          Key: {
-            id: Id,
-            partition: Partition,
-          },
-        });
-        const multipleItemCommand = new BatchGetCommand({
-          RequestItems: {
-            Shift: {
-              Keys: [
-                { id: 1, partition: '2023-06-29-C' },
-                { id: 0, partition: '2023-06-29-C' },
-              ],
-            },
-            Shifts: {
-              Keys: [
-                { userID: 1, partition: '2023-06-29-C' },
-                { userID: 0, partition: '2023-06-29-C' },
-              ],
-            },
-          },
-        });
-        const response = await this.dynamoDBDocClient.send(multipleItemCommand);
-        console.log(response);
-        return JSON.stringify(response);
-      } catch (response) {
-        console.error('ERROR', response);
-        return JSON.stringify(response);
-      }
-    };
-    return query();
+    const multipleItemCommand = new BatchGetCommand({
+      RequestItems: {
+        Shift: {
+          Keys: [
+            { id: 1, partition: '2023-06-29-C' },
+            { id: 0, partition: '2023-06-29-C' },
+          ],
+        },
+        Shifts: {
+          Keys: [
+            { userID: 1, partition: '2023-06-29-C' },
+            { userID: 0, partition: '2023-06-29-C' },
+          ],
+        },
+      },
+    });
+    return this.resResult(multipleItemCommand);
   }
 
   uploadShift(partition, userId) {
@@ -81,43 +83,97 @@ export class ClientService {
   }
 
   uploadsShift() {
-    const query = async (): Promise<string> => {
-      try {
-        const command = new BatchWriteCommand({
-          RequestItems: {
-            Shifts: [
-              {
-                PutRequest: {
-                  Item: {
-                    partition: '2023-07-29-C',
-                    userID: 0,
-                  },
-                },
+    const command = new BatchWriteCommand({
+      RequestItems: {
+        Shifts: [
+          {
+            PutRequest: {
+              Item: {
+                partition: '2023-07-29-C',
+                userID: 0,
               },
-              {
-                PutRequest: {
-                  Item: {
-                    partition: '2023-06-02-C',
-                    userID: 1,
-                  },
-                },
-              },
-            ],
+            },
           },
-        });
-        const response = await this.dynamoDBDocClient.send(command);
-        console.log(response);
-        return JSON.stringify(response);
-      } catch (response) {
-        console.error('ERROR', response);
-        return JSON.stringify(response);
-      }
-    };
-    return query();
+          {
+            PutRequest: {
+              Item: {
+                partition: '2023-06-02-C',
+                userID: 1,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return this.resResult(command);
   }
 
+  deletesShift() {
+    const command = new BatchWriteCommand({
+      RequestItems: {
+        Shifts: [
+          {
+            DeleteRequest: {
+              Key: {
+                partition: '2023-07-29-C',
+                userID: 0,
+              },
+            },
+          },
+          {
+            DeleteRequest: {
+              Key: {
+                partition: '2023-07-29-C',
+                userID: 0,
+              },
+            },
+          },
+        ],
+      },
+    });
+    return this.resResult(command);
+  }
+
+  updatesShift(shifts: ShiftDto[]) {
+    const requestItems = shifts.map((shift) => {
+      if (shift.opera === 'up') {
+        return {
+          PutRequest: {
+            Item: shift.item,
+          },
+        };
+      } else {
+        return {
+          DeleteRequest: {
+            Item: shift.item,
+          },
+        };
+      }
+    });
+    const command = new BatchWriteCommand({
+      RequestItems: {
+        Shifts: [requestItems],
+      },
+    });
+    return this.resResult(command);
+  }
+
+  updateUser(userDto: userDto) {
+    const command = new BatchWriteCommand({
+      RequestItems: {
+        Users: [
+          {
+            PutRequest: {
+              Item: userDto.Item,
+            },
+          },
+        ],
+      },
+    });
+    return this.resResult(command);
+  }
   //　こいつをどの関数でも使いたい
-  async resResult(command: PutCommand) {
+  async resResult(command) {
     const response = await this.dynamoDBDocClient.send(command);
     console.log(response);
     return JSON.stringify(response);
