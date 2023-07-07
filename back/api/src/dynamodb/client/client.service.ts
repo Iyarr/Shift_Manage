@@ -1,21 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import {
-  DynamoDBClient,
-  ScanCommand,
-  CreateTableCommand,
-} from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
   BatchGetCommand,
+  BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
-interface Shift {
-  id: number;
-  partition: string;
-}
 @Injectable()
 export class ClientService {
   private dynamoDBClient: DynamoDBClient;
@@ -49,9 +42,6 @@ export class ClientService {
             partition: Partition,
           },
         });
-        const key = {
-          key: { id: 2, partition: '2023-06-29-C' },
-        };
         const multipleItemCommand = new BatchGetCommand({
           RequestItems: {
             Shift: {
@@ -79,17 +69,44 @@ export class ClientService {
     return query();
   }
 
-  addShift() {
+  uploadShift(partition, userId) {
+    const command = new PutCommand({
+      TableName: 'Shifts',
+      Item: {
+        partition: partition,
+        userID: Number(userId),
+      },
+    });
+    return this.resResult(command);
+  }
+
+  uploadsShift() {
     const query = async (): Promise<string> => {
       try {
-        const command = new PutCommand({
-          TableName: 'Shifts',
-          Item: {
-            partition: '2023-06-29-C',
-            userID: 2,
+        const command = new BatchWriteCommand({
+          RequestItems: {
+            Shifts: [
+              {
+                PutRequest: {
+                  Item: {
+                    partition: '2023-07-29-C',
+                    userID: 0,
+                  },
+                },
+              },
+              {
+                PutRequest: {
+                  Item: {
+                    partition: '2023-06-02-C',
+                    userID: 1,
+                  },
+                },
+              },
+            ],
           },
         });
         const response = await this.dynamoDBDocClient.send(command);
+        console.log(response);
         return JSON.stringify(response);
       } catch (response) {
         console.error('ERROR', response);
@@ -97,5 +114,12 @@ export class ClientService {
       }
     };
     return query();
+  }
+
+  //　こいつをどの関数でも使いたい
+  async resResult(command: PutCommand) {
+    const response = await this.dynamoDBDocClient.send(command);
+    console.log(response);
+    return JSON.stringify(response);
   }
 }

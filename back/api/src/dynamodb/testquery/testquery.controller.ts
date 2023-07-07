@@ -12,8 +12,13 @@ export class TestqueryController {
     return this.ClientService.testQuery(Number(params.id), params.partition);
   }
 
-  @Get('add')
-  async addShift(): Promise<string> {
-    return this.ClientService.addShift();
+  @Get('add/:userId/:partition')
+  uploadShift(@Param() params) {
+    return this.ClientService.uploadShift(params.partition, params.userId);
+  }
+
+  @Get('adds')
+  uploadsShift(): Promise<string> {
+    return this.ClientService.uploadsShift();
   }
 }
