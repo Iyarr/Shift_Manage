@@ -1,15 +1,13 @@
 import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
 import { ClientService } from '../client/client.service';
 
-@Controller('testquery')
+@Controller('query')
 export class TestqueryController {
-  constructor(private ClientService: ClientService) {
-    this.ClientService = ClientService;
-  }
+  constructor(private ClientService: ClientService) {}
 
-  @Get(':id/:partition')
-  getHello(@Param() params) {
-    return this.ClientService.testQuery(params.id, params.partition);
+  @Get()
+  testQuery() {
+    return this.ClientService.testQuery();
   }
 
   @Get('add/:userId/:partition')
@@ -18,13 +16,13 @@ export class TestqueryController {
   }
 
   @Get('adds')
-  uploadsShift(): Promise<string> {
+  uploadsShift() {
     return this.ClientService.uploadsShift();
   }
 
   @Patch('adds')
-  updatesShift(@Body() shifts: ShiftDto[]): Promise<string> {
-    return this.ClientService.updatesShift(shifts);
+  updateShifts(@Body() shifts: ShiftDto[]) {
+    return this.ClientService.updateShifts(shifts);
   }
 
   @Post('addUser')
