@@ -3,11 +3,11 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
   GetCommand,
-  PutCommand,
   BatchGetCommand,
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
+import { TestQuery } from './testqurery';
 
 type Shift = {
   partition: string;
@@ -22,6 +22,7 @@ type userDto = {
   Item: userItem;
   opera: 'del' | 'up';
 };
+
 type userItem = {
   id: string;
   userName: string;
@@ -32,80 +33,26 @@ type userItem = {
 
 @Injectable()
 export class ClientService {
-  private dynamoDBDocClient: DynamoDBDocumentClient;
-
-  constructor() {
+  constructor(
+    private dynamoDBDocClient: DynamoDBDocumentClient,
+    private testquery: TestQuery,
+  ) {
     dotenv.config();
-    const dynamoDBClient = new DynamoDBClient({
-      region: 'ap-northeast-1',
-      credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    });
-    this.dynamoDBDocClient = DynamoDBDocumentClient.from(dynamoDBClient);
-  }
-
-  testQuery() {
-    const multipleItemCommand = new BatchGetCommand({
-      RequestItems: {
-        Shift: {
-          Keys: [
-            { id: 1, partition: '2023-06-29-C' },
-            { id: 0, partition: '2023-06-29-C' },
-          ],
+    this.dynamoDBDocClient = DynamoDBDocumentClient.from(
+      new DynamoDBClient({
+        region: 'ap-northeast-1',
+        credentials: {
+          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         },
-        Shifts: {
-          Keys: [
-            { userID: 1, partition: '2023-06-29-C' },
-            { userID: 0, partition: '2023-06-29-C' },
-          ],
-        },
-      },
-    });
-    return this.resResult(multipleItemCommand);
+      }),
+    );
+    this.testquery = new TestQuery(this.dynamoDBDocClient);
+  }
+  Usetestquery() {
+    return this.testquery;
   }
 
-  uploadShift(partition: string, userId: string) {
-    const command = new PutCommand({
-      TableName: 'Shifts',
-      Item: {
-        partition: partition,
-        userID: Number(userId),
-      },
-    });
-    return this.resResult(command);
-  }
-
-  uploadsShift() {
-    const command = new BatchWriteCommand({
-      RequestItems: {
-        Shifts: [
-          { partition: '2023-07-29-C', userID: 0 },
-          { partition: '2023-06-02-C', userID: 1 },
-        ].map((shift) => {
-          return { PutRequest: { Item: shift } };
-        }),
-      },
-    });
-    return this.resResult(command);
-  }
-
-  deletesShift() {
-    const command = new BatchWriteCommand({
-      RequestItems: {
-        Shifts: [
-          { partition: '2023-07-29-C', userID: 0 },
-          { partition: '2023-06-02-C', userID: 1 },
-        ].map((shift) => {
-          return { DeleteRequest: { Key: shift } };
-        }),
-      },
-    });
-    return this.resResult(command);
-  }
-
-  // こっから実際使われそうなAPI
   downloadShifts(shifts: Shift[]) {
     const command = new BatchGetCommand({
       RequestItems: {
@@ -168,6 +115,16 @@ export class ClientService {
     return this.resResult(command);
   }
 
+  DownloadUserInfo(userId: string) {
+    const command = new GetCommand({
+      TableName: 'Users',
+      Key: {
+        id: userId,
+      },
+      ProjectionExpression: 'id,password',
+    });
+    return this.resResult(command);
+  }
   //　こいつをどの関数でも使いたい
   resResult(command) {
     const response = this.dynamoDBDocClient.send(command);
