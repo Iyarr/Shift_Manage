@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
+  PutCommand,
   GetCommand,
+  DeleteCommand,
   BatchGetCommand,
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
@@ -11,24 +13,18 @@ import { TestQuery } from './testqurery';
 
 type Shift = {
   partition: string;
-  userId: number;
+  userName: string;
 };
 type ShiftDto = {
   item: Shift;
-  opera: 'del' | 'up';
+  shouldAdd: boolean;
 };
 
 type userDto = {
-  Item: userItem;
-  opera: 'del' | 'up';
-};
-
-type userItem = {
-  id: string;
   userName: string;
   displayName: string;
   password: string;
-  iaManager: string;
+  isManager: boolean;
 };
 
 @Injectable()
@@ -66,19 +62,17 @@ export class ClientService {
 
   updateShifts(shifts: ShiftDto[]) {
     const requestItems = shifts.map((shift) => {
-      if (shift.opera === 'up') {
-        return {
-          PutRequest: {
-            Item: shift.item,
-          },
-        };
-      } else {
-        return {
-          DeleteRequest: {
-            Item: shift.item,
-          },
-        };
-      }
+      return shift.shouldAdd
+        ? {
+            PutRequest: {
+              Item: shift.item,
+            },
+          }
+        : {
+            DeleteRequest: {
+              Item: shift.item,
+            },
+          };
     });
     const command = new BatchWriteCommand({
       RequestItems: {
@@ -87,45 +81,44 @@ export class ClientService {
     });
     return this.resResult(command);
   }
-
-  //referUser(userid: string, requireItem: string[]) {}
-
-  updateUser(userDto: userDto) {
-    const command = new BatchWriteCommand({
-      RequestItems: {
-        Users: [
-          userDto.opera === 'up'
-            ? [
-                {
-                  PutRequest: {
-                    Item: userDto.Item,
-                  },
-                },
-              ]
-            : [
-                {
-                  DeleteRequest: {
-                    Item: userDto.Item,
-                  },
-                },
-              ],
-        ],
+  WriteUser(userDto: userDto) {
+    const command = new PutCommand({
+      TableName: 'Shifts',
+      Item: userDto,
+    });
+    return this.resResult(command);
+  }
+  DeleteUser(userName: string) {
+    const command = new DeleteCommand({
+      TableName: 'Users',
+      Key: {
+        userName: userName,
       },
     });
     return this.resResult(command);
   }
 
-  DownloadUserInfo(userId: string) {
+  DownloadUserInfo(userName: string) {
     const command = new GetCommand({
       TableName: 'Users',
       Key: {
-        id: userId,
+        userName: userName,
       },
-      ProjectionExpression: 'id,password',
     });
     return this.resResult(command);
   }
-  //　こいつをどの関数でも使いたい
+
+  DownloadForAuth(userName: string) {
+    const command = new GetCommand({
+      TableName: 'Users',
+      Key: {
+        userName: userName,
+      },
+      ProjectionExpression: 'userName,password',
+    });
+    return this.resResult(command);
+  }
+
   resResult(command) {
     const response = this.dynamoDBDocClient.send(command);
     console.log(response);

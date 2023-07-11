@@ -7,21 +7,38 @@ import {
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
 
+type Shift = {
+  partition: string;
+  userName: string;
+};
+
 @Injectable()
 export class TestQuery {
   constructor(private dynamoDBDocClient: DynamoDBDocumentClient) {}
   createTable() {
     const command = new CreateTableCommand({
-      TableName: 'EspressoDrinks',
+      TableName: 'Users',
       AttributeDefinitions: [
         {
-          AttributeName: 'DrinkName',
+          AttributeName: 'userName',
           AttributeType: 'S',
+        },
+        {
+          AttributeName: 'displayName',
+          AttributeType: 'S',
+        },
+        {
+          AttributeName: 'password',
+          AttributeType: 'S',
+        },
+        {
+          AttributeName: 'isManager',
+          AttributeType: 'B',
         },
       ],
       KeySchema: [
         {
-          AttributeName: 'DrinkName',
+          AttributeName: 'userName',
           KeyType: 'HASH',
         },
       ],
@@ -35,14 +52,14 @@ export class TestQuery {
       RequestItems: {
         Shift: {
           Keys: [
-            { id: 1, partition: '2023-06-29-C' },
-            { id: 0, partition: '2023-06-29-C' },
+            { userName: '1', partition: '2023-06-29-C' },
+            { userName: '0', partition: '2023-06-29-C' },
           ],
         },
         Shifts: {
           Keys: [
-            { userID: 1, partition: '2023-06-29-C' },
-            { userID: 0, partition: '2023-06-29-C' },
+            { userName: '1', partition: '2023-06-29-C' },
+            { userName: '0', partition: '2023-06-29-C' },
           ],
         },
       },
@@ -50,13 +67,10 @@ export class TestQuery {
     return this.resResult(command);
   }
 
-  uploadShift(partition: string, userId: string) {
+  uploadShift(shift: Shift) {
     const command = new PutCommand({
       TableName: 'Shifts',
-      Item: {
-        partition: partition,
-        userID: Number(userId),
-      },
+      Item: shift,
     });
     return this.resResult(command);
   }

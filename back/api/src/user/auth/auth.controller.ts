@@ -2,7 +2,7 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 type authDto = {
-  id: string;
+  userName: string;
   password: string;
 };
 

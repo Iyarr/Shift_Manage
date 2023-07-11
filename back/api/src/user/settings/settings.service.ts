@@ -2,24 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { ClientService } from '../../dynamodb/client/client.service';
 
 type UserDto = {
-  id: string;
   userName: string;
   displayName: string;
   password: string;
-  iaManager: string;
+  isManager: boolean;
 };
 
 @Injectable()
 export class SettingsService {
   constructor(private ClientService: ClientService) {}
-  UpdateSettings(Item: UserDto) {
-    {
-    }
+  UpdateSettings(upgradedItem: UserDto) {
+    return this.ClientService.WriteUser(upgradedItem);
   }
   CreateUser(UserInfo: UserDto) {
-    this.ClientService.updateUser({ Item: UserInfo, opera: 'up' });
+    return this.ClientService.WriteUser(UserInfo);
   }
-  deleteUser() {}
+  deleteUser(userId: string) {
+    return this.ClientService.DeleteUser(userId);
+  }
 
-  getSettingns() {}
+  getSettingns(userId: string) {
+    return this.ClientService.DownloadUserInfo(userId);
+  }
 }

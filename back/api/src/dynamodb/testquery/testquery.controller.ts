@@ -1,6 +1,10 @@
 import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
 import { ClientService } from '../client/client.service';
 
+type Shift = {
+  partition: string;
+  userName: string;
+};
 @Controller('query')
 export class TestqueryController {
   constructor(private ClientService: ClientService) {}
@@ -11,11 +15,8 @@ export class TestqueryController {
   }
 
   @Get('add/:userId/:partition')
-  uploadShift(@Param() params) {
-    return this.ClientService.Usetestquery().uploadShift(
-      params.partition,
-      params.userId,
-    );
+  uploadShift(@Param() params: Shift) {
+    return this.ClientService.Usetestquery().uploadShift(params);
   }
 
   @Get('adds')
@@ -29,27 +30,22 @@ export class TestqueryController {
   }
 
   @Post('addUser')
-  addUser(@Body() user: userDto) {
-    return this.ClientService.updateUser(user);
+  addUser(@Body() user: userItem) {
+    return this.ClientService.WriteUser(user);
   }
 }
 
 type Item = {
   partition: string;
-  userId: number;
+  userName: string;
 };
 type ShiftDto = {
   item: Item;
-  opera: 'del' | 'up';
-};
-type userDto = {
-  Item: userItem;
-  opera: 'del' | 'up';
+  shouldAdd: boolean;
 };
 type userItem = {
-  id: string;
   userName: string;
   displayName: string;
   password: string;
-  iaManager: string;
+  isManager: boolean;
 };
