@@ -1,12 +1,8 @@
 import { Controller, Get, Param, Post, Body, Patch } from '@nestjs/common';
-import { ClientService } from '../client/client.service';
+import { ClientService } from './client/client.service';
 
-type Shift = {
-  partition: string;
-  userName: string;
-};
-@Controller('query')
-export class TestqueryController {
+@Controller('test')
+export class TestController {
   constructor(private ClientService: ClientService) {}
 
   @Get()
@@ -34,7 +30,10 @@ export class TestqueryController {
     return this.ClientService.WriteUser(user);
   }
 }
-
+type Shift = {
+  partition: string;
+  userName: string;
+};
 type Item = {
   partition: string;
   userName: string;
