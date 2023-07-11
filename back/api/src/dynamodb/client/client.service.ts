@@ -9,7 +9,8 @@ import {
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
-import { TestQuery } from './testqurery';
+import { TestQuery } from './test';
+import { SetupQuery } from './setup';
 
 type Shift = {
   partition: string;
@@ -32,6 +33,7 @@ export class ClientService {
   constructor(
     private dynamoDBDocClient: DynamoDBDocumentClient,
     private testquery: TestQuery,
+    private setupquery: SetupQuery,
   ) {
     dotenv.config();
     this.dynamoDBDocClient = DynamoDBDocumentClient.from(
@@ -44,9 +46,13 @@ export class ClientService {
       }),
     );
     this.testquery = new TestQuery(this.dynamoDBDocClient);
+    this.setupquery = new SetupQuery(this.dynamoDBDocClient);
   }
-  Usetestquery() {
+  UseTestQuery() {
     return this.testquery;
+  }
+  UseSetupQuery() {
+    return this.setupquery;
   }
 
   downloadShifts(shifts: Shift[]) {

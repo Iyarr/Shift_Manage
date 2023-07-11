@@ -11,17 +11,17 @@ export class TestqueryController {
 
   @Get()
   testQuery() {
-    return this.ClientService.Usetestquery().testQuery();
+    return this.ClientService.UseTestQuery().testQuery();
   }
 
   @Get('add/:userId/:partition')
   uploadShift(@Param() params: Shift) {
-    return this.ClientService.Usetestquery().uploadShift(params);
+    return this.ClientService.UseTestQuery().uploadShift(params);
   }
 
   @Get('adds')
   uploadsShift() {
-    return this.ClientService.Usetestquery().uploadsShift();
+    return this.ClientService.UseTestQuery().uploadsShift();
   }
 
   @Patch('adds')

@@ -12,55 +12,18 @@ type Shift = {
   userName: string;
 };
 
+const shiftItem = [
+  { userName: 'Ohtani', partition: '2023-07-29-C' },
+  { userName: 'yamada', partition: '2023-06-02-C' },
+];
 @Injectable()
 export class TestQuery {
   constructor(private dynamoDBDocClient: DynamoDBDocumentClient) {}
-  createTable() {
-    const command = new CreateTableCommand({
-      TableName: 'Users',
-      AttributeDefinitions: [
-        {
-          AttributeName: 'userName',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: 'displayName',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: 'password',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: 'isManager',
-          AttributeType: 'B',
-        },
-      ],
-      KeySchema: [
-        {
-          AttributeName: 'userName',
-          KeyType: 'HASH',
-        },
-      ],
-    });
-
-    return this.resResult(command);
-  }
-
   testQuery() {
     const command = new BatchGetCommand({
       RequestItems: {
-        Shift: {
-          Keys: [
-            { userName: '1', partition: '2023-06-29-C' },
-            { userName: '0', partition: '2023-06-29-C' },
-          ],
-        },
         Shifts: {
-          Keys: [
-            { userName: '1', partition: '2023-06-29-C' },
-            { userName: '0', partition: '2023-06-29-C' },
-          ],
+          Keys: shiftItem,
         },
       },
     });
@@ -78,10 +41,7 @@ export class TestQuery {
   uploadsShift() {
     const command = new BatchWriteCommand({
       RequestItems: {
-        Shifts: [
-          { partition: '2023-07-29-C', userID: 0 },
-          { partition: '2023-06-02-C', userID: 1 },
-        ].map((shift) => {
+        Shifts: shiftItem.map((shift) => {
           return { PutRequest: { Item: shift } };
         }),
       },
@@ -92,10 +52,7 @@ export class TestQuery {
   deletesShift() {
     const command = new BatchWriteCommand({
       RequestItems: {
-        Shifts: [
-          { partition: '2023-07-29-C', userID: 0 },
-          { partition: '2023-06-02-C', userID: 1 },
-        ].map((shift) => {
+        Shifts: shiftItem.map((shift) => {
           return { DeleteRequest: { Key: shift } };
         }),
       },
