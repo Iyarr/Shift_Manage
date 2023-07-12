@@ -30,11 +30,11 @@ type userDto = {
 
 @Injectable()
 export class ClientService {
-  constructor(
-    private dynamoDBDocClient: DynamoDBDocumentClient,
-    private testquery: TestQuery,
-    private setupquery: SetupQuery,
-  ) {
+  private dynamoDBDocClient: DynamoDBDocumentClient;
+  private setupquery: SetupQuery;
+  private testquery: TestQuery;
+  //
+  constructor() {
     dotenv.config();
     this.dynamoDBDocClient = DynamoDBDocumentClient.from(
       new DynamoDBClient({

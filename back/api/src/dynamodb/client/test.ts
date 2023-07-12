@@ -1,5 +1,3 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTableCommand } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
   PutCommand,
@@ -16,7 +14,7 @@ const shiftItem = [
   { userName: 'Ohtani', partition: '2023-07-29-C' },
   { userName: 'yamada', partition: '2023-06-02-C' },
 ];
-@Injectable()
+
 export class TestQuery {
   constructor(private dynamoDBDocClient: DynamoDBDocumentClient) {}
   testQuery() {

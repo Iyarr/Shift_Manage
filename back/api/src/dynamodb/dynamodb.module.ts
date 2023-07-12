@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ClientService } from './client/client.service';
 import { SettingController } from './setting.controller';
 import { TestController } from './test.controller';

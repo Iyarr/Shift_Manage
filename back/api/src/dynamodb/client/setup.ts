@@ -1,11 +1,9 @@
-import { Injectable } from '@nestjs/common';
 import { CreateTableCommand } from '@aws-sdk/client-dynamodb';
 import {
   DynamoDBDocumentClient,
   BatchWriteCommand,
 } from '@aws-sdk/lib-dynamodb';
 
-@Injectable()
 export class SetupQuery {
   constructor(private dynamoDBDocClient: DynamoDBDocumentClient) {}
   UsersTable() {
@@ -16,18 +14,6 @@ export class SetupQuery {
           AttributeName: 'userName',
           AttributeType: 'S',
         },
-        {
-          AttributeName: 'displayName',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: 'password',
-          AttributeType: 'S',
-        },
-        {
-          AttributeName: 'isManager',
-          AttributeType: 'B',
-        },
       ],
       KeySchema: [
         {
@@ -35,6 +21,11 @@ export class SetupQuery {
           KeyType: 'HASH',
         },
       ],
+      BillingMode: 'PROVISIONED',
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 2,
+        WriteCapacityUnits: 2,
+      },
     });
 
     return this.resResult(command);
@@ -62,6 +53,11 @@ export class SetupQuery {
           KeyType: 'RANGE',
         },
       ],
+      BillingMode: 'PROVISIONED',
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 2,
+        WriteCapacityUnits: 2,
+      },
     });
 
     return this.resResult(command);
