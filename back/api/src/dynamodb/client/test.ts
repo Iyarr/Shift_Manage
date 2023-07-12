@@ -58,8 +58,8 @@ export class TestQuery {
     return this.resResult(command);
   }
 
-  resResult(command) {
-    const response = this.dynamoDBDocClient.send(command);
+  async resResult(command) {
+    const response = await this.dynamoDBDocClient.send(command);
     console.log(response);
     return JSON.stringify(response);
   }
