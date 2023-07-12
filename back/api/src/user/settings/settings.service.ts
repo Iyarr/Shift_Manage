@@ -11,12 +11,10 @@ type UserDto = {
 @Injectable()
 export class SettingsService {
   constructor(private ClientService: ClientService) {}
-  UpdateSettings(upgradedItem: UserDto) {
-    return this.ClientService.WriteUser(upgradedItem);
-  }
-  CreateUser(UserInfo: UserDto) {
+  WriteUser(UserInfo: UserDto) {
     return this.ClientService.WriteUser(UserInfo);
   }
+
   deleteUser(userId: string) {
     return this.ClientService.DeleteUser(userId);
   }

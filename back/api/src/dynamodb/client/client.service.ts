@@ -16,6 +16,7 @@ type Shift = {
   partition: string;
   userName: string;
 };
+
 type ShiftDto = {
   item: Shift;
   shouldAdd: boolean;
@@ -66,7 +67,7 @@ export class ClientService {
     return this.resResult(command);
   }
 
-  updateShifts(shifts: ShiftDto[]) {
+  WriteShifts(shifts: ShiftDto[]) {
     const requestItems = shifts.map((shift) => {
       return shift.shouldAdd
         ? {
@@ -120,7 +121,7 @@ export class ClientService {
       Key: {
         userName: userName,
       },
-      ProjectionExpression: 'userName,password',
+      ProjectionExpression: 'userName,password,isManager',
     });
     return this.resResult(command);
   }

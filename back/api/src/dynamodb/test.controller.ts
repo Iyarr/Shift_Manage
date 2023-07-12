@@ -22,7 +22,7 @@ export class TestController {
 
   @Patch('adds')
   updateShifts(@Body() shifts: ShiftDto[]) {
-    return this.ClientService.updateShifts(shifts);
+    return this.ClientService.WriteShifts(shifts);
   }
 
   @Post('addUser')

@@ -16,5 +16,5 @@ export class SettingsController {
   getSettings(@Param('userid') id: string) {}
 
   @Post()
-  PostAuth(@Body() Body: UserDto) {}
+  PostAuth(@Body() user: UserDto) {}
 }
