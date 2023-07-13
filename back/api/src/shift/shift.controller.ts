@@ -16,11 +16,11 @@ export class ShiftController {
   constructor(private ShiftService: ShiftService) {}
   @Get('/week/:monday')
   getWeeklyShiftData(@Param('monday') day: string) {
-    return this.ShiftService.DLWeekFromMonday(day);
+    return this.ShiftService.SubmitRequestFromMonday(day);
   }
 
   @Patch('')
   patchShifts(@Body() Shifts: ShiftDto[]) {
-    return this.ShiftService.UploadShifts(Shifts);
+    return this.ShiftService.FormWriteShiftsReq(Shifts);
   }
 }

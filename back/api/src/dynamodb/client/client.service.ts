@@ -67,6 +67,21 @@ export class ClientService {
     return this.resResult(command);
   }
 
+  DownloadShiftsFromPartitions(days: string[]) {
+    const command = new BatchGetCommand({
+      RequestItems: {
+        Shifts: {
+          Keys: days.map((day) => {
+            return {
+              HashKey: day,
+              SortKey: true,
+            };
+          }),
+        },
+      },
+    });
+    return this.resResult(command);
+  }
   WriteShifts(shifts: ShiftDto[]) {
     const requestItems = shifts.map((shift) => {
       return shift.shouldAdd
