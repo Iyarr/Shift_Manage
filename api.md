@@ -15,42 +15,75 @@
   - Content-Type:application/json
 
   ```json
+  /*
   {
-    "week": {[
+    "week": {
         {
-            "date": "2023/01/01",
-            "member": {
-                "X":["大谷","佐藤","山田"],
-                "Y":["大谷","山田"],
-                "Z":["山田","佐藤"],
-                "A":["大谷"],
-                "B":["山田"],
-                "C":["佐藤"],
-                "D":[]
-            }
+            "partition": "2023-01-01-X",
+            "name": ["大谷","佐藤","山田"],
         },
         {
-            "date": "2023/01/02",
-            "member": {
-                "X":["大谷","佐藤","山田"],
-                "Y":["大谷","山田"],
-                "Z":["山田","佐藤"],
-                "A":["大谷"],
-                "B":["山田"],
-                "C":["佐藤"],
-                "D":[]
-            }
-        }
+            "partition": "2023-01-01-Y",
+            "name": ["大谷","山田"],
+        },
+        {
+            "partition": "2023-01-01-Z",
+            "name": ["山田","佐藤"],
+        },
+        {
+            "partition": "2023-01-01-A",
+            "name": ["大谷"],
+        },
+        {
+            "partition": "2023-01-01-B",
+            "name": ["山田"],
+        },
+        {
+            "partition": "2023-01-01-C",
+            "name": ["佐藤"],
+        },
+        {
+            "partition": "2023-01-01-D",
+            "name": [],
+        },
+        {
+            "partition": "2023-01-02-X",
+            "name": ["大谷","佐藤","山田"],
+        },
+        {
+            "partition": "2023-01-02-Y",
+            "name": ["大谷","山田"],
+        },
+        {
+            "partition": "2023-01-02-Z",
+            "name": ["山田","佐藤"],
+        },
+        {
+            "partition": "2023-01-02-A",
+            "name": ["大谷"],
+        },
+        {
+            "partition": "2023-01-02-B",
+            "name": ["山田"],
+        },
+        {
+            "partition": "2023-01-02-C",
+            "name": ["佐藤"],
+        },
+        {
+            "partition": "2023-01-02-D",
+            "name": [],
+        },
         .....
-    ]}
-  }
+    }
+  } */
   ```
 
 ### シフト更新
 
 - エンドポイント
 
-  - PATCH `/api/shift`
+  - PATCH `/api/shift/user`
 
 - Request
 
@@ -59,6 +92,7 @@
   - Body
 
     ```json
+    /*
     {
       "update": [
         {
@@ -72,20 +106,8 @@
           "user": "ohtani"
         }
       ]
-    }
+    } */
     ```
-
-- Response 200 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "update": {
-      "result": true
-    }
-  }
-  ```
 
 ## ユーザー [/user]
 
@@ -113,23 +135,9 @@
 
   ```json
   {
-    "auth": {
-      "result": true,
-      "is_manager": false,
-      "false_count": 0
-    }
-  }
-  ```
-
-- Response 404 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "auth": {
-      "result": false
-    }
+    "result": true,
+    "is_manager": false,
+    "false_count": 0
   }
   ```
 
@@ -152,15 +160,3 @@
       "password": "ohtani_pass"
     }
     ```
-
-- Response 200 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "update": {
-      "result": true
-    }
-  }
-  ```
