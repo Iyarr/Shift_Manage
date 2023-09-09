@@ -23,6 +23,23 @@ export class DynamodbService {
   async SubmitCommand(command) {
     const response = await this.dynamoDBDocClient.send(command);
     console.log(response);
-    return JSON.stringify(response);
+    /*
+    if (err) {
+      if (err.code === 'ResourceNotFoundException') {
+        console.error('DynamoDB Resource Not Found Error:', err.message);
+        // リソースが存在しない場合の処理
+      } else if (err.code === 'ProvisionedThroughputExceededException') {
+        console.error('DynamoDB Throughput Exceeded Error:', err.message);
+        // スループット制限を超えた場合の処理
+      } else {
+        console.error('DynamoDB Error:', err.message);
+        // その他のエラーに対する処理
+      }
+    } else {
+      // 正常なデータの処理
+      console.log('DynamoDB Response:', data);
+    }
+    */
+    return response;
   }
 }

@@ -16,4 +16,10 @@ declare module 'types-module' {
     displayName: string;
     isManager: boolean;
   };
+
+  export type shift = {
+    partition: string;
+    persons: string[];
+    delete: boolean;
+  };
 }

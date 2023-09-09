@@ -53,13 +53,13 @@ export class UserService {
   UpdateUser(username: string, userItem: UpdateUserItem) {
     const ExpressionAttributeNames: Record<string, string> = {};
     const ExpressionAttributeValues: Record<string, string> = {};
-    let UpdateExpression = 'SET ';
+    const UpdateExpression: string[] = [];
 
     ['password', 'displayName', 'isManager'].forEach((item) => {
       if (item in userItem) {
         ExpressionAttributeNames['#' + item] = item;
         ExpressionAttributeValues[':' + item] = userItem[item];
-        UpdateExpression = UpdateExpression + '#' + item + ' = ' + ':' + item;
+        UpdateExpression.push(' #' + item + ' = ' + ':' + item);
       }
     });
 
@@ -68,7 +68,7 @@ export class UserService {
       Key: { userName: username },
       ExpressionAttributeNames: ExpressionAttributeNames,
       ExpressionAttributeValues: ExpressionAttributeValues,
-      UpdateExpression: UpdateExpression,
+      UpdateExpression: 'SET' + UpdateExpression.join(','),
     });
     return this.dynamodbService.SubmitCommand(command);
   }
