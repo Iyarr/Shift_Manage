@@ -37,23 +37,29 @@ describe('ShiftService', () => {
     expect(result).toBeDefined();
     // metadata.httpStatusCode < 400
   });
-  /*
+
   it('test GetSchedule', () => {
     const stday = format(Day, 'yyyy-MM-dd') + '-A';
     const fiday = format(addDays(Day, Daymount), 'yyyy-MM-dd') + '-Z';
 
     const result = service.GetSchedule(stday, fiday);
-    expect(result).toBeDefined();
+
+    console.log(typeof result);
+    //expect(result).toBeDefined();
     // metadata.httpStatusCode < 400
   });
+  /*
 
   it('test GetYoursShifts', () => {
     const stday = format(Day, 'yyyy-MM-dd') + '-A';
     const fiday = format(addDays(Day, Daymount), 'yyyy-MM-dd') + '-Z';
 
-    const result = service.GetYoursShifts(names.slice(0, 2), stday, fiday);
+    const result = service.GetYoursShifts(
+      ['sato', 'kishimoto', 'yamada'],
+      stday,
+      fiday,
+    );
     expect(result).toBeDefined();
-    // metadata.httpStatusCode < 400
   });
   */
 });

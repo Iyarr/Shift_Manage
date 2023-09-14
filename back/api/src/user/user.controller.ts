@@ -18,7 +18,7 @@ export class UserController {
     return this.userService.NewUser(body);
   }
 
-  @Patch('update/:username')
+  @Post('update/:username')
   Update(@Param('username') username: string, @Body() body: UpdateUserItem) {
     return this.userService.UpdateUser(username, body);
   }

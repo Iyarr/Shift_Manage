@@ -45,6 +45,7 @@ export class ShiftService {
         Schedule: RequestItem,
       },
     });
+
     return this.dynamodbService.SubmitCommand(command);
   }
 
@@ -63,6 +64,18 @@ export class ShiftService {
         ':Fi': { S: fi },
       },
     });
+    /*
+    this.dynamodbService
+      .SubmitCommand(command)
+      .then((data) => {
+        // 成功時の処理
+        console.log(typeof data);
+        return typeof data;
+      })
+      .catch((error) => {
+        // エラー時の処理
+        console.error('Error:', error);
+      })*/
     return this.dynamodbService.SubmitCommand(command);
   }
 

@@ -6,24 +6,24 @@ import { shift } from 'types-module';
 export class ShiftController {
   constructor(private shiftService: ShiftService) {}
 
-  @Get('between/:stpartition/and/:fipartition')
-  GetSchedule(@Param() param: { stPartition: string; fiPartition: string }) {
-    return this.shiftService.GetSchedule(param.stPartition, param.fiPartition);
+  @Get('between/:start/and/:finish')
+  GetSchedule(@Param() param: { start: string; finish: string }) {
+    return this.shiftService.GetSchedule(param.start, param.finish);
   }
 
-  @Get('user/:username/between/:stpartition/and/:fipartition')
+  @Get('user/:username/between/:start/and/:finish')
   GetYoursShifts(
     @Param()
     param: {
       username: string;
-      stPartition: string;
-      fiPartition: string;
+      start: string;
+      finish: string;
     },
   ) {
     return this.shiftService.GetYoursShifts(
       [param.username],
-      param.stPartition,
-      param.fiPartition,
+      param.start,
+      param.finish,
     );
   }
 

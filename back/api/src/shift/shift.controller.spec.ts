@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DynamodbModule } from '../dynamodb/dynamodb.module';
+import { ShiftModule } from './shift.module';
 import { ShiftController } from './shift.controller';
 import { addDays, format } from 'date-fns';
 import { shift } from 'types-module';
@@ -13,7 +14,7 @@ describe('ShiftController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DynamodbModule],
+      imports: [DynamodbModule, ShiftModule],
       controllers: [ShiftController],
     }).compile();
 
@@ -21,12 +22,12 @@ describe('ShiftController', () => {
   });
 
   it('test GetSchedule', () => {
-    const stPartition = format(Day, 'yyyy-MM-dd') + '-A';
-    const fiPartition = format(addDays(Day, Daymount), 'yyyy-MM-dd') + '-Z';
+    const start = format(Day, 'yyyy-MM-dd') + '-A';
+    const finish = format(addDays(Day, Daymount), 'yyyy-MM-dd') + '-Z';
 
     const result = controller.GetSchedule({
-      stPartition: stPartition,
-      fiPartition: fiPartition,
+      start: start,
+      finish: finish,
     });
     expect(result).toBeDefined();
     // metadata.httpStatusCode < 400

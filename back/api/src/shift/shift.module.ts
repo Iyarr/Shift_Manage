@@ -7,5 +7,6 @@ import { ShiftService } from './shift.service';
   imports: [DynamodbModule],
   controllers: [ShiftController],
   providers: [ShiftService],
+  exports: [ShiftService],
 })
 export class ShiftModule {}

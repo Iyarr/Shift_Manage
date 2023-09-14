@@ -22,7 +22,7 @@ export class DynamodbService {
 
   async SubmitCommand(command) {
     const response = await this.dynamoDBDocClient.send(command);
-    console.log(response);
+    //console.log(response);
     /*
     if (err) {
       if (err.code === 'ResourceNotFoundException') {
