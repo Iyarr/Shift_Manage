@@ -1,89 +1,62 @@
 # api の設計
 
-## 公開シフト取得[/api/shift]
+## 公開シフト取得[/shift]
 
 ### シフト一覧表示
 
 - エンドポイント
 
-  - GET `/api/shift/week/{date}`
+  - GET `between/{:stpartition}/and/{:fipartition}`
 
-    date：表示する週の月曜日の日にち
+    stpartition：表示する日の最初のコマ
 
 - Response 200 (application/json)
 
   - Content-Type:application/json
 
   ```json
-  /*
   {
     "week": {
         {
             "partition": "2023-01-01-X",
-            "name": ["大谷","佐藤","山田"],
+            "sato": true,
+            "yamada": true,
+            "Ohtani": true,
         },
         {
             "partition": "2023-01-01-Y",
-            "name": ["大谷","山田"],
+            "yamada": true,
+            "Ohtani": true,
         },
         {
             "partition": "2023-01-01-Z",
-            "name": ["山田","佐藤"],
+            "sato": true,
+            "yamada": true,
         },
         {
             "partition": "2023-01-01-A",
-            "name": ["大谷"],
+            "Ohtani": true,
         },
         {
             "partition": "2023-01-01-B",
-            "name": ["山田"],
+            "yamada": true,
         },
         {
             "partition": "2023-01-01-C",
-            "name": ["佐藤"],
-        },
-        {
-            "partition": "2023-01-01-D",
-            "name": [],
-        },
-        {
-            "partition": "2023-01-02-X",
-            "name": ["大谷","佐藤","山田"],
-        },
-        {
-            "partition": "2023-01-02-Y",
-            "name": ["大谷","山田"],
-        },
-        {
-            "partition": "2023-01-02-Z",
-            "name": ["山田","佐藤"],
-        },
-        {
-            "partition": "2023-01-02-A",
-            "name": ["大谷"],
-        },
-        {
-            "partition": "2023-01-02-B",
-            "name": ["山田"],
-        },
-        {
-            "partition": "2023-01-02-C",
-            "name": ["佐藤"],
-        },
-        {
-            "partition": "2023-01-02-D",
-            "name": [],
+            "sato": true,
         },
         .....
     }
-  } */
+  }
   ```
 
 ### シフト更新
 
+シフトのコマの担当者の内訳の更新データを上書きするので、指定されていない担当者は削除される
+
 - エンドポイント
 
-  - PATCH `/api/shift/user`
+  - Post ``
 
 - Request
 
@@ -92,21 +65,20 @@
   - Body
 
     ```json
-    /*
     {
       "update": [
         {
-          "date": "2023/01/01",
-          "partition": "x",
-          "user": "ohtani"
+          "partition": "2023-01-01-X",
+          "persons": ["sato", "ohtani", "yamada"],
+          "delete": false
         },
         {
-          "date": "2023/01/04",
-          "partition": "A",
-          "user": "ohtani"
+          "partition": "2023-01-01-Y",
+          "persons": ["ohtani", "yamada"],
+          "delete": false
         }
       ]
-    } */
+    }
     ```
 
 ## ユーザー [/user]
@@ -115,16 +87,16 @@
 
 - エンドポイント
 
-  - POST `/api/auth`
+  - POST `/login`
 
 - Request
 
   - Content-Type:application/json
   - Body
 
-    ```js
+    ```json
     {
-      "name": "ohtani"
+      "name": "ohtani",
       "password": "ohtani_pass"
     }
     ```
@@ -135,9 +107,7 @@
 
   ```json
   {
-    "result": true,
-    "is_manager": false,
-    "false_count": 0
+    "is_manager": false
   }
   ```
 
@@ -145,18 +115,45 @@
 
 - エンドポイント
 
-  - POST `/api/user/{username}`
+  - POST `/update/{:username}`
+
+- Request
+
+  - Body
+
+    ```json
+    {
+      "display_name": "大谷",
+      "password": "ohtani_pass",
+      "isManager": false
+    }
+    ```
+
+### 個人データ作成
+
+- エンドポイント
+
+  - POST `/create`
+
+- Request
+
+  - Body
+
+    ```json
+    {
+      "userName": "Ohtani",
+      "display_name": "大谷",
+      "password": "ohtani_pass",
+      "isManager": false
+    }
+    ```
+
+### 個人データ削除
+
+- エンドポイント
+
+  - Get `/delete/{:username}`
 
 - Request
 
   username：取得したいユーザー名
-
-  - Body
-
-    ```js
-    {
-      "display_name": "大谷"
-      "name": "newohtani"
-      "password": "ohtani_pass"
-    }
-    ```

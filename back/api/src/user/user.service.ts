@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
-import { LoginUserData, NewUserData, UpdateUserItem } from 'types-module';
+import { UpdateUserItem } from 'types-module';
+
 import {
-  PutCommand,
-  GetCommand,
-  DeleteCommand,
+  PutItemCommand,
+  GetItemCommand,
+  DeleteItemCommand,
+  UpdateItemCommand,
+  AttributeValue,
   QueryCommand,
-  UpdateCommand,
-} from '@aws-sdk/lib-dynamodb';
+} from '@aws-sdk/client-dynamodb';
 
 @Injectable()
 export class UserService {
   constructor(private dynamodbService: DynamodbService) {}
 
-  VerifyUser(userItem: LoginUserData) {
+  VerifyUser(userItem: Record<string, string>) {
     const command = new QueryCommand({
       TableName: 'Users',
       KeyConditionExpression: '#hashKey = :HashValue',
@@ -23,49 +25,55 @@ export class UserService {
       },
       FilterExpression: '#password = :PassValue',
       ExpressionAttributeValues: {
-        ':HashValue': userItem.username,
-        ':PassValue': userItem.password,
+        ':HashValue': { S: userItem.username },
+        ':PassValue': { S: userItem.password },
       },
       ProjectionExpression: 'isManager',
     });
     return this.dynamodbService.SubmitCommand(command);
   }
 
-  GetUserInfo(Username: string) {
-    const command = new GetCommand({
+  async GetUserInfo(Username: string) {
+    const command = new GetItemCommand({
       TableName: 'Users',
       Key: {
-        userName: Username,
+        userName: { S: Username },
       },
     });
-    return this.dynamodbService.SubmitCommand(command);
+    const response = await this.dynamodbService.SubmitCommand(command);
+    return response;
   }
 
-  NewUser(userItem: NewUserData) {
-    console.log(userItem);
-    const command = new PutCommand({
+  NewUser(userItem: Record<string, string | boolean>) {
+    const command = new PutItemCommand({
       TableName: 'Users',
-      Item: userItem,
+      Item: this.dynamodbService.ObjectToAttributeValue(userItem),
     });
     return this.dynamodbService.SubmitCommand(command);
   }
 
   UpdateUser(username: string, userItem: UpdateUserItem) {
     const ExpressionAttributeNames: Record<string, string> = {};
-    const ExpressionAttributeValues: Record<string, string> = {};
+    const ExpressionAttributeValues: Record<string, AttributeValue> = {};
     const UpdateExpression: string[] = [];
 
-    ['password', 'displayName', 'isManager'].forEach((item) => {
+    ['password', 'displayName'].forEach((item) => {
       if (item in userItem) {
         ExpressionAttributeNames['#' + item] = item;
-        ExpressionAttributeValues[':' + item] = userItem[item];
+        ExpressionAttributeValues[':' + item] = { S: userItem[item] };
         UpdateExpression.push(' #' + item + ' = ' + ':' + item);
       }
     });
 
-    const command = new UpdateCommand({
+    if ('isManager' in userItem) {
+      ExpressionAttributeNames['#isManager'] = 'isManager';
+      ExpressionAttributeValues[':isManager'] = { BOOL: userItem['isManager'] };
+      UpdateExpression.push(' #isManager = :isManager');
+    }
+
+    const command = new UpdateItemCommand({
       TableName: 'Users',
-      Key: { userName: username },
+      Key: { userName: { S: username } },
       ExpressionAttributeNames: ExpressionAttributeNames,
       ExpressionAttributeValues: ExpressionAttributeValues,
       UpdateExpression: 'SET' + UpdateExpression.join(','),
@@ -74,10 +82,10 @@ export class UserService {
   }
 
   DeleteUser(Username: string) {
-    const command = new DeleteCommand({
+    const command = new DeleteItemCommand({
       TableName: 'Users',
       Key: {
-        userName: Username,
+        userName: { S: Username },
       },
     });
     return this.dynamodbService.SubmitCommand(command);

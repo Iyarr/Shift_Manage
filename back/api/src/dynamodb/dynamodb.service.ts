@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBClient, AttributeValue } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
@@ -20,26 +20,36 @@ export class DynamodbService {
     );
   }
 
+  ObjectToAttributeValue(obj: Record<string, string | boolean>) {
+    const res: Record<string, AttributeValue> = {};
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        res[key] = { S: obj[key] as string };
+      } else {
+        res[key] = { BOOL: obj[key] as boolean };
+      }
+    }
+    return res;
+  }
+
+  AttributeValueToString(obj: Record<string, AttributeValue>) {
+    const res: Record<string, string | boolean> = {};
+    for (const key in obj) {
+      if ('S' in obj[key]) {
+        res[key] = obj[key].S;
+      } else {
+        res[key] = obj[key].BOOL;
+      }
+    }
+    return res;
+  }
+
   async SubmitCommand(command) {
     const response = await this.dynamoDBDocClient.send(command);
-    //console.log(response);
-    /*
-    if (err) {
-      if (err.code === 'ResourceNotFoundException') {
-        console.error('DynamoDB Resource Not Found Error:', err.message);
-        // リソースが存在しない場合の処理
-      } else if (err.code === 'ProvisionedThroughputExceededException') {
-        console.error('DynamoDB Throughput Exceeded Error:', err.message);
-        // スループット制限を超えた場合の処理
-      } else {
-        console.error('DynamoDB Error:', err.message);
-        // その他のエラーに対する処理
-      }
-    } else {
-      // 正常なデータの処理
-      console.log('DynamoDB Response:', data);
+
+    if ('Item' in response) {
+      return this.AttributeValueToString(response.Item);
     }
-    */
     return response;
   }
 }

@@ -1,18 +1,19 @@
-import { Controller, Get, Post, Param, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { UserService } from './user.service';
-import { LoginUserData, NewUserData, UpdateUserItem } from 'types-module';
+import { UpdateUserItem } from 'types-module';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('login')
-  Login(@Body() body: LoginUserData) {
+  Login(@Body() body: Record<string, string>) {
     return this.userService.VerifyUser(body);
   }
 
   @Post('create')
-  Create(@Body() body: NewUserData) {
+  Create(@Body() body: Record<string, string>) {
     //console.log(body);
     //return body;
     return this.userService.NewUser(body);
@@ -24,8 +25,9 @@ export class UserController {
   }
 
   @Get(':username')
-  Download(@Param('username') username: string) {
-    return this.userService.GetUserInfo(username);
+  async Download(@Param('username') username: string, @Res() res: Response) {
+    const result = await this.userService.GetUserInfo(username);
+    return res.json(result);
   }
 
   @Get('delete/:username')

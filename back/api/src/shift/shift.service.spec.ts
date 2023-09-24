@@ -43,12 +43,8 @@ describe('ShiftService', () => {
     const fiday = format(addDays(Day, Daymount), 'yyyy-MM-dd') + '-Z';
 
     const result = service.GetSchedule(stday, fiday);
-
-    console.log(typeof result);
-    //expect(result).toBeDefined();
-    // metadata.httpStatusCode < 400
+    expect(result).toBeDefined();
   });
-  /*
 
   it('test GetYoursShifts', () => {
     const stday = format(Day, 'yyyy-MM-dd') + '-A';
@@ -61,5 +57,4 @@ describe('ShiftService', () => {
     );
     expect(result).toBeDefined();
   });
-  */
 });

@@ -4,17 +4,9 @@ import {
   WriteRequest,
   BatchWriteItemCommand,
   AttributeValue,
-  PutRequest,
-  DeleteRequest,
   QueryCommand,
 } from '@aws-sdk/client-dynamodb';
 import { shift } from 'types-module';
-import {
-  BatchWriteCommand,
-  GetCommand,
-  DeleteCommand,
-  UpdateCommand,
-} from '@aws-sdk/lib-dynamodb';
 
 @Injectable()
 export class ShiftService {
@@ -64,18 +56,7 @@ export class ShiftService {
         ':Fi': { S: fi },
       },
     });
-    /*
-    this.dynamodbService
-      .SubmitCommand(command)
-      .then((data) => {
-        // 成功時の処理
-        console.log(typeof data);
-        return typeof data;
-      })
-      .catch((error) => {
-        // エラー時の処理
-        console.error('Error:', error);
-      })*/
+
     return this.dynamodbService.SubmitCommand(command);
   }
 
