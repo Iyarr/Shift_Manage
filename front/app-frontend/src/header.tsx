@@ -1,21 +1,12 @@
 import React from "react";
 
-type StringToVoid = (To: string) => void;
-
 type HeaderState = {
-  setMode: StringToVoid;
+  setMode: (To: string) => void;
 };
 
-interface button {
-  name: string;
-  value: string;
-}
-
 function Header(props: HeaderState) {
-  const Buttons: button[] = [
-    { name: "ShiftList", value: "公開シフト" },
-    { name: "ShiftSet", value: "シフト設定" },
-    { name: "Regular", value: "固定シフト" },
+  const Buttons: { name: string; value: string }[] = [
+    { name: "ShiftList", value: "シフト" },
     { name: "User", value: "ユーザー" },
   ];
 

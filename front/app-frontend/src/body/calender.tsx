@@ -30,6 +30,8 @@ function CalenderComponent(props: Options) {
     }
   `;
 
+  const calenderData = fetch(``);
+
   const calendarOptions = {
     ref: calendarRef,
     plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
@@ -47,7 +49,7 @@ function CalenderComponent(props: Options) {
         <div>
           {parts.map((part, index) => (
             <div key={index}>
-              {arg.date.toLocaleDateString().replaceAll("/", "-") + ">" + part}
+              {arg.date.toLocaleDateString().replaceAll("/", "-") + "-" + part}
             </div>
           ))}
         </div>

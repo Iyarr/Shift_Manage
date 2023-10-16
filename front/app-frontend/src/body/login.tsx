@@ -1,26 +1,44 @@
-import React from 'react';
-import './css/login.css';
-
+import React from "react";
 
 function Login() {
-    return(
-      <div className="login">
-        <h1>ログイン</h1>
-        <form action="" method="post" className="loginform">
-          <div className="">
-            <h2>ユーザー名</h2>
-            <input type="text" name="user" placeholder="Username"/>
-          </div>
+  const login: React.CSSProperties = {
+    backgroundColor: "aquamarine",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    textAlign: "center",
+    fontSize: "2vw",
+  };
 
-          <div>
-            <h2>パスワード</h2>
-            <input type="password" name="pass" placeholder="Password"/>
-          </div>
-          <input type="button" value="ログイン" className="button"/>
-        </form>
-        <p>パスワード忘れた...</p>
-      </div>
-    );
+  const h1: React.CSSProperties = {
+    fontSize: "3em",
+  };
+
+  const button: React.CSSProperties = {
+    margin: "10% 0%",
+    width: "80%",
+  };
+
+  return (
+    <div style={login}>
+      <h1 style={h1}>ログイン</h1>
+      <form action="" method="post" className="loginform">
+        <div className="">
+          <h2>ユーザー名</h2>
+          <input type="text" name="userName" placeholder="Username" />
+        </div>
+
+        <div>
+          <h2>パスワード</h2>
+          <input type="password" name="password" placeholder="Password" />
+        </div>
+        <button type="submit" style={button}>
+          ログイン
+        </button>
+      </form>
+    </div>
+  );
 }
 
 export default Login;
