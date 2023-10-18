@@ -1,12 +1,11 @@
 FROM node:latest
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apt update && apt upgrade -y && \
+    npm i -g npm@latest
 
 COPY ./app-frontend /home/app-frontend
 
 WORKDIR /home/app-frontend
 
-RUN npm i -g npm@9.6.7 && \
-    npm i && \
-    npm i create-react-app
+RUN npm ci && \
+    npm start

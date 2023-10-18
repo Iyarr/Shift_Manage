@@ -1,13 +1,12 @@
 FROM node:latest
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apt update && apt upgrade -y && \
+    npm i -g npm@latest
 
 COPY ./api /home/api
 
 WORKDIR /home/api
 
-RUN npm i -g npm@9.6.7 && \
-    npm i && \
-    npm i -g @nestjs/cli
+RUN npm i && \
+    npm start
 

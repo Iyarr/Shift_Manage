@@ -1,29 +1,20 @@
-version: '3.8'
-services:
+version: "3.7"
 
+services:
   backend:
-    build: back
+    build: ./back/
     container_name: "nestjs"
     privileged: true
+    ports:
+      - "3001:3001"
     tty: true
-    depends_on:
-      - dynamodb-local
 
   frontend:
-    build: front
+    build: ./front/
     container_name: "react"
     privileged: true
+    ports:
+      - "3000:3000"
     tty: true
     depends_on:
       - backend
-
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    ports:
-      - "8000:8000"
-    volumes:
-      - "./db/dynamodb:/home/dynamodblocal/data"
-    working_dir: /home/dynamodblocal
-
