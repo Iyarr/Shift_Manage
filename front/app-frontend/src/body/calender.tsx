@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, CSSProperties } from "react";
 import { Calendar, DatesSetArg, CustomButtonInput } from "@fullcalendar/core";
 import {
   SlotLabelContentArg,
@@ -78,28 +78,44 @@ function CalenderComponent(props: { selectable: boolean }) {
     */
   };
 
+  const style: CSSProperties = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    fontSize: "1vw",
+    transform: "translate(-50%, -50%)",
+    textAlign: "center",
+    width: "70%",
+    height: "80%",
+  };
+
   return (
-    <FullCalendar
-      locale="ja"
-      ref={calendarRef}
-      plugins={[
-        dayGridPlugin, // initialView
-        interactionPlugin, // インタラクションや操作に関連する設定(未使用)
-        timeGridPlugin, // allDaySlot,slotDuratio
-      ]}
-      initialView="timeGridWeek"
-      allDaySlot={false}
-      slotMinTime={{ hours: 0 }}
-      slotMaxTime={{ hours: 7 }}
-      slotDuration={{ hours: 1 }}
-      hiddenDays={[0]}
-      height="auto"
-      slotLabelContent={(arg: SlotLabelContentArg) => {
-        return parts[Number(arg.text[0])];
-      }}
-      {...calendarOptions}
-      {...props}
-    />
+    <div style={style}>
+      <FullCalendar
+        locale="ja"
+        ref={calendarRef}
+        plugins={[
+          dayGridPlugin, // initialView
+          interactionPlugin, // インタラクションや操作に関連する設定(未使用)
+          timeGridPlugin, // allDaySlot,slotDuratio
+        ]}
+        initialView="timeGridWeek"
+        allDaySlot={false}
+        slotMinTime={{ hours: 0 }}
+        slotMaxTime={{ hours: 7 }}
+        slotDuration={{ hours: 1 }}
+        hiddenDays={[0]}
+        contentHeight="auto" // adjust this value as needed
+        slotLabelContent={(arg: SlotLabelContentArg) => {
+          return parts[Number(arg.text[0])];
+        }}
+        /*{(arg: SlotLabelContentArg) => {
+          return parts[Number(arg.text[0])];
+        }}*/
+        {...calendarOptions}
+        {...props}
+      />
+    </div>
   );
 }
 export default CalenderComponent;
