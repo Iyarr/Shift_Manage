@@ -7,5 +7,4 @@ COPY ./app-frontend /home/app-frontend
 
 WORKDIR /home/app-frontend
 
-RUN npm ci && \
-    npm start
+RUN npm ci

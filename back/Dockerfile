@@ -7,6 +7,5 @@ COPY ./api /home/api
 
 WORKDIR /home/api
 
-RUN npm i && \
-    npm start
+RUN npm ci
 
