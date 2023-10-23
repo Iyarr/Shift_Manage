@@ -40,7 +40,7 @@ function User() {
   const Item: CSSProperties = {
     margin: "1vmin",
     width: "28vmin",
-    height: "4vh",
+    height: "4.5vh",
     fontSize: "2.5vh",
     borderBottom: "1px solid black",
   };
