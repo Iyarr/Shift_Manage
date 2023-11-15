@@ -34,7 +34,9 @@
 
   - type `Record<string, Record<string, boolean>>`
 
-  - +update( { is_added: boolean,newArrangements } )
+  - init(newArrangements)
+
+  - +Update( { is_added: boolean,newArrangements } )
 
 - UserName（表示タイプが admin のときは空文字）
 
@@ -48,9 +50,9 @@
 
   - `type string[]`
 
-  - +get()
+  - +Get()
 
-  - +update(newArrangements)
+  - +Update(newArrangements)
 
 - InitialDate
 
@@ -58,8 +60,13 @@
 
   - type `string`
 
-- FinalDate
+  - +Update(date)
+  - +ToToday()
 
-      InitialDate の最終日バージョン
+### メソッド
 
-  - type `string`
+- GetToday()
+
+  今日の日付が含まれる週の取得
+
+-
