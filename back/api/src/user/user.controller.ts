@@ -25,8 +25,8 @@ export class UserController {
   }
 
   @Get(':username')
-  async Download(@Param('username') username: string, @Res() res: Response) {
-    const result = await this.userService.GetUserInfo(username);
+  get(@Param('username') username: string, @Res() res: Response) {
+    const result = this.userService.GetUser(username);
     return res.json(result);
   }
 

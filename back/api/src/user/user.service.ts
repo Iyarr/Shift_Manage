@@ -33,7 +33,7 @@ export class UserService {
     return this.dynamodbService.SubmitCommand(command);
   }
 
-  async GetUserInfo(Username: string) {
+  async GetUser(Username: string) {
     const command = new GetItemCommand({
       TableName: 'Users',
       Key: {

@@ -1,159 +1,123 @@
 # api の設計
 
-## 公開シフト取得[/shift]
+## シフト[/shift]
 
-### シフト一覧表示
+### GET `between/{start}/and/{finish}`
 
-- エンドポイント
+> - start：最初のコマ
+> - finish：最後のコマ
 
-  - GET `between/{:stpartition}/and/{:fipartition}`
+指定した期間のコマの内容を取得する
 
-    stpartition：表示する日の最初のコマ
+#### レスポンス
 
-- Response 200 (application/json)
-
-  - Content-Type:application/json
-
-  ```json
-  {
-    "week": {
-        {
-            "partition": "2023-01-01-X",
-            "sato": true,
-            "yamada": true,
-            "Ohtani": true,
-        },
-        {
-            "partition": "2023-01-01-Y",
-            "yamada": true,
-            "Ohtani": true,
-        },
-        {
-            "partition": "2023-01-01-Z",
-            "sato": true,
-            "yamada": true,
-        },
-        {
-            "partition": "2023-01-01-A",
-            "Ohtani": true,
-        },
-        {
-            "partition": "2023-01-01-B",
-            "yamada": true,
-        },
-        {
-            "partition": "2023-01-01-C",
-            "sato": true,
-        },
-        .....
-    }
-  }
-  ```
-
-### シフト更新
-
-シフトのコマの担当者の内訳の更新データを上書きするので、指定されていない担当者は削除される
-
-- エンドポイント
-
-  - Post ``
-
-- Request
-
-  - Content-Type:application/json
-
-  - Body
-
-    ```json
+```json
+{
+  "week": [
     {
-      "update": [
-        {
-          "partition": "2023-01-01-X",
-          "persons": ["sato", "ohtani", "yamada"],
-          "delete": false
-        },
-        {
-          "partition": "2023-01-01-Y",
-          "persons": ["ohtani", "yamada"],
-          "delete": false
-        }
-      ]
+      "part": "String",
+      "name1": true,
+      "name2": true,
+      "name3": true
     }
-    ```
+  ]
+}
+```
+
+> それぞれの name に対する値は一つの boolean 型になっているが、name が定義される個数はそれぞれ変わる
+
+- 200: データを取得できました
+- 400: リクエストデータが無効です
+- 404: データが見つかりません
+
+### Post
+
+指定したコマの内容を更新する
+
+#### リクエスト
+
+```json
+{
+  "update": [
+    {
+      "part": "string",
+      "names": ["name1", "name2", "name3"]
+    }
+  ]
+}
+```
+
+> シフトのコマごとのデータを全て上書きするので、指定されていない担当者は削除される
+
+#### レスポンス
+
+- 200: データを更新できました
+- 400: リクエストデータが無効です
 
 ## ユーザー [/user]
 
-### 認証トークン取得
+### POST `/login`
 
-- エンドポイント
+ログイン認証
 
-  - POST `/login`
+#### リクエスト
 
-- Request
+```json
+{
+  "name": "String",
+  "password": "String"
+}
+```
 
-  - Content-Type:application/json
-  - Body
+#### レスポンス
 
-    ```json
-    {
-      "name": "ohtani",
-      "password": "ohtani_pass"
-    }
-    ```
+- 200: 認証に成功しました
+- 400: リクエストデータが無効です
+- 404: 認証に失敗しました
 
-- Response 200 (application/json)
+### PUT `/update/{username}`
 
-  - Content-Type:application/json
+個人データ更新
 
-  ```json
-  {
-    "is_manager": false
-  }
-  ```
+#### リクエスト
 
-### 個人データ更新
+```json
+{
+  "display_name": "大谷",
+  "password": "ohtani_pass",
+  "is_admin": false
+}
+```
 
-- エンドポイント
+#### レスポンス
 
-  - POST `/update/{:username}`
-
-- Request
-
-  - Body
-
-    ```json
-    {
-      "display_name": "大谷",
-      "password": "ohtani_pass",
-      "isManager": false
-    }
-    ```
+- 200: データを更新できました
+- 400: リクエストデータが無効です
 
 ### 個人データ作成
 
-- エンドポイント
+### POST `/create`
 
-  - POST `/create`
+#### リクエスト
 
-- Request
+```json
+{
+  "name": "Ohtani",
+  "display_name": "大谷",
+  "password": "ohtani_pass",
+  "is_admin": false
+}
+```
 
-  - Body
+#### レスポンス
 
-    ```json
-    {
-      "userName": "Ohtani",
-      "display_name": "大谷",
-      "password": "ohtani_pass",
-      "isManager": false
-    }
-    ```
+- 200: データを更新できました
+- 400: リクエストデータが無効です
 
-### 個人データ削除
+### DELETE `/{name}`
 
-- エンドポイント
+#### レスポンス
 
-  - Get `/delete/{:username}`
-
-- Request
-
-  username：取得したいユーザー名
+- 200: 削除に成功しました
+- 400: リクエストデータが無効です
+- 404: ユーザーが存在しません
