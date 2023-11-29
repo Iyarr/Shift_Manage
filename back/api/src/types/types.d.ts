@@ -1,25 +1,25 @@
 declare module 'types-module' {
   export type LoginUserData = {
-    username: string;
+    user_id: string;
     password: string;
   };
 
-  export type UpdateUserItem = {
+  export type UpdateUserBody = {
     password?: string;
-    displayName?: string;
-    isManager?: boolean;
+    name?: string;
+    is_admin?: boolean;
   };
 
   export type NewUserData = {
-    userName: string;
+    user_id: string;
     password: string;
-    displayName: string;
-    isManager: boolean;
+    name: string;
+    is_admin: boolean;
   };
 
   export type shift = {
-    partition: string;
-    persons: string[];
+    part: string;
+    user_ids: string[];
     delete: boolean;
   };
 }

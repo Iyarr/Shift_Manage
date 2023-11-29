@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
-import { UpdateUserItem } from 'types-module';
+import { UpdateUserBody } from 'types-module';
 
 import {
   PutItemCommand,
@@ -20,7 +20,7 @@ export class UserService {
       TableName: 'Users',
       KeyConditionExpression: '#hashKey = :HashValue',
       ExpressionAttributeNames: {
-        '#hashKey': 'userName',
+        '#hashKey': 'user_id',
         '#password': 'password',
       },
       FilterExpression: '#password = :PassValue',
@@ -28,23 +28,23 @@ export class UserService {
         ':HashValue': { S: userItem.username },
         ':PassValue': { S: userItem.password },
       },
-      ProjectionExpression: 'isManager',
+      ProjectionExpression: 'is_admin',
     });
     return this.dynamodbService.SubmitCommand(command);
   }
 
-  async GetUser(Username: string) {
+  GetUser(user_id: string) {
     const command = new GetItemCommand({
       TableName: 'Users',
       Key: {
-        userName: { S: Username },
+        user_id: { S: user_id },
       },
     });
-    const response = await this.dynamodbService.SubmitCommand(command);
+    const response = this.dynamodbService.SubmitCommand(command);
     return response;
   }
 
-  NewUser(userItem: Record<string, string | boolean>) {
+  CreateUser(userItem: Record<string, string | boolean>) {
     const command = new PutItemCommand({
       TableName: 'Users',
       Item: this.dynamodbService.ObjectToAttributeValue(userItem),
@@ -52,12 +52,12 @@ export class UserService {
     return this.dynamodbService.SubmitCommand(command);
   }
 
-  UpdateUser(username: string, userItem: UpdateUserItem) {
+  UpdateUser(user_id: string, userItem: UpdateUserBody) {
     const ExpressionAttributeNames: Record<string, string> = {};
     const ExpressionAttributeValues: Record<string, AttributeValue> = {};
     const UpdateExpression: string[] = [];
 
-    ['password', 'displayName'].forEach((item) => {
+    ['password', 'name'].forEach((item) => {
       if (item in userItem) {
         ExpressionAttributeNames['#' + item] = item;
         ExpressionAttributeValues[':' + item] = { S: userItem[item] };
@@ -65,15 +65,15 @@ export class UserService {
       }
     });
 
-    if ('isManager' in userItem) {
-      ExpressionAttributeNames['#isManager'] = 'isManager';
-      ExpressionAttributeValues[':isManager'] = { BOOL: userItem['isManager'] };
-      UpdateExpression.push(' #isManager = :isManager');
+    if ('is_admin' in userItem) {
+      ExpressionAttributeNames['#is_admin'] = 'is_admin';
+      ExpressionAttributeValues[':is_admin'] = { BOOL: userItem['is_admin'] };
+      UpdateExpression.push(' #is_admin = :is_admin');
     }
 
     const command = new UpdateItemCommand({
       TableName: 'Users',
-      Key: { userName: { S: username } },
+      Key: { user_id: { S: user_id } },
       ExpressionAttributeNames: ExpressionAttributeNames,
       ExpressionAttributeValues: ExpressionAttributeValues,
       UpdateExpression: 'SET' + UpdateExpression.join(','),
@@ -81,11 +81,11 @@ export class UserService {
     return this.dynamodbService.SubmitCommand(command);
   }
 
-  DeleteUser(Username: string) {
+  DeleteUser(user_id: string) {
     const command = new DeleteItemCommand({
       TableName: 'Users',
       Key: {
-        userName: { S: Username },
+        user_id: { S: user_id },
       },
     });
     return this.dynamodbService.SubmitCommand(command);
