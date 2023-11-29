@@ -56,7 +56,43 @@
 
 ## ユーザー [/user]
 
-### POST `/login`
+### POST `create`
+
+#### リクエスト
+
+```json
+{
+  "name": "Ohtani",
+  "display_name": "大谷",
+  "password": "ohtani_pass",
+  "is_admin": "boolean"
+}
+```
+
+#### レスポンス
+
+- 200: データを更新できました
+- 400: リクエストデータが無効です
+
+### GET `/{name}`
+
+指定したユーザーの内容を取得する
+
+#### レスポンス
+
+```json
+{
+  "display_name": "String",
+  "password": "String",
+  "is_admin": "boolean"
+}
+```
+
+- 200: データを取得できました
+- 400: リクエストデータが無効です
+- 404: データが見つかりません
+
+### POST `login`
 
 ログイン認証
 
@@ -75,7 +111,7 @@
 - 400: リクエストデータが無効です
 - 404: 認証に失敗しました
 
-### PUT `/update/{username}`
+### PUT `update/{username}`
 
 個人データ更新
 
@@ -85,7 +121,7 @@
 {
   "display_name": "大谷",
   "password": "ohtani_pass",
-  "is_admin": false
+  "is_admin": "boolean"
 }
 ```
 
@@ -94,27 +130,7 @@
 - 200: データを更新できました
 - 400: リクエストデータが無効です
 
-### 個人データ作成
-
-### POST `/create`
-
-#### リクエスト
-
-```json
-{
-  "name": "Ohtani",
-  "display_name": "大谷",
-  "password": "ohtani_pass",
-  "is_admin": false
-}
-```
-
-#### レスポンス
-
-- 200: データを更新できました
-- 400: リクエストデータが無効です
-
-### DELETE `/{name}`
+### DELETE `{name}`
 
 #### レスポンス
 
