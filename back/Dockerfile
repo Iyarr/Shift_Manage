@@ -7,7 +7,7 @@ COPY ./api /home/api
 
 WORKDIR /home/api
 
-RUN npm i -g npm@9.6.7 && \
+RUN npm i -g npm@10.2.5 && \
     npm i && \
     npm i -g @nestjs/cli
 

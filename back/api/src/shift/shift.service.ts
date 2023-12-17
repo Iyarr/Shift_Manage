@@ -16,7 +16,7 @@ export class ShiftService {
     const RequestItem: WriteRequest[] = shifts.map((shift) => {
       const item: Record<string, AttributeValue> = {
         ConstantKey: { S: 'ConstantValue' },
-        partition: { S: shift.partition },
+        partition: { S: shift.part },
       };
 
       const result: WriteRequest = {};
@@ -24,8 +24,8 @@ export class ShiftService {
       if (shift.delete) {
         result.DeleteRequest = { Key: item };
       } else {
-        shift.persons.forEach((person) => {
-          item[person] = { BOOL: true };
+        shift.user_ids.forEach((user_ids) => {
+          item[user_ids] = { BOOL: true };
         });
         result.PutRequest = { Item: item };
       }

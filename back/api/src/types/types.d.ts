@@ -1,6 +1,6 @@
 declare module 'types-module' {
   export type LoginUserData = {
-    user_id: string;
+    id: string;
     password: string;
   };
 
@@ -11,7 +11,7 @@ declare module 'types-module' {
   };
 
   export type NewUserData = {
-    user_id: string;
+    id: string;
     password: string;
     name: string;
     is_admin: boolean;

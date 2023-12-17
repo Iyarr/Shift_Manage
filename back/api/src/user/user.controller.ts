@@ -21,9 +21,9 @@ export class UserController {
     return this.userService.CreateUser(body);
   }
 
-  @Get(':user_id')
-  Get(@Param('user_id') username: string, @Res() res: Response) {
-    return res.json(this.userService.GetUser(username));
+  @Get(':id')
+  Get(@Param('id') id: string, @Res() res: Response) {
+    return res.json(this.userService.GetUser(id));
   }
 
   @Post('login')
@@ -31,13 +31,13 @@ export class UserController {
     return this.userService.VerifyUser(body);
   }
 
-  @Put('update/:user_id')
-  Update(@Param('user_id') username: string, @Body() body: UpdateUserBody) {
-    return this.userService.UpdateUser(username, body);
+  @Put('update/:id')
+  Update(@Param('id') id: string, @Body() body: UpdateUserBody) {
+    return this.userService.UpdateUser(id, body);
   }
 
-  @Delete(':user_id')
-  Delete(@Param('user_id') username: string) {
-    return this.userService.DeleteUser(username);
+  @Delete(':id')
+  Delete(@Param('id') id: string) {
+    return this.userService.DeleteUser(id);
   }
 }

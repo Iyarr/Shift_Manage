@@ -5,16 +5,25 @@ services:
     container_name: "nestjs"
     privileged: true
     tty: true
-    environment:
-      - aws_access_key_id=${MY_KEY_ID}
-      - aws_secret_access_key=${SECRET_KEY}
-    env_file:
-      - .env
+    networks:
+      shift_manage:
+        ipv4_address: 128.0.0.1
 
   frontend:
     build: front
     container_name: "react"
     privileged: true
     tty: true
+    networks:
+      shift_manage:
+        ipv4_address: 128.0.0.2
     depends_on:
       - backend
+
+networks:
+  shift_manage:
+    ipam:
+      driver: default
+      config:
+        # クラスBのアドレス
+        - subnet: 128.0.0.0/16

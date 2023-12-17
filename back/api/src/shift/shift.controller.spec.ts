@@ -39,8 +39,8 @@ describe('ShiftController', () => {
       const stDay = addDays(Day, ct);
       partitions.forEach((partition) => {
         shifts.push({
-          partition: format(stDay, 'yyyy-MM-dd') + '-' + partition,
-          persons: names,
+          part: format(stDay, 'yyyy-MM-dd') + '-' + partition,
+          user_ids: names,
           delete: false,
         });
       });

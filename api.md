@@ -21,6 +21,8 @@
       - [レスポンス](#レスポンス-5)
     - [2.5 DELETE `/{name}`](#25-delete-name)
       - [レスポンス](#レスポンス-6)
+  - [テスト用データの作成](#テスト用データの作成)
+    - [使用するユーザー](#使用するユーザー)
 
 ## 1. シフト[/shift]
 
@@ -159,3 +161,44 @@
 - 200: 削除に成功しました
 - 400: リクエストデータが無効です
 - 404: ユーザーが存在しません
+
+## テスト用データの作成
+
+### 使用するユーザー
+
+```json
+{
+  "users": [
+    {
+      "id": "Sato",
+      "password": "satopass",
+      "name": "佐藤",
+      "is_admin": false
+    },
+    {
+      "id": "Kishimoto",
+      "password": "kishimotopass",
+      "name": "岸本",
+      "is_admin": false
+    },
+    {
+      "id": "Yamada",
+      "password": "yamadapass",
+      "name": "山田",
+      "is_admin": false
+    },
+    {
+      "id": "Ohtani",
+      "password": "Ohtanipass",
+      "name": "大谷",
+      "is_admin": false
+    },
+    {
+      "id": "Taniyama",
+      "password": "Tanipass",
+      "name": "谷山",
+      "is_admin": true
+    }
+  ]
+}
+```

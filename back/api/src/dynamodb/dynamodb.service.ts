@@ -1,23 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient, AttributeValue } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
 import * as dotenv from 'dotenv';
 
 @Injectable()
 export class DynamodbService {
-  private dynamoDBDocClient: DynamoDBDocumentClient;
+  private dynamoDBClient: DynamoDBClient;
 
   constructor() {
     dotenv.config();
-    this.dynamoDBDocClient = DynamoDBDocumentClient.from(
-      new DynamoDBClient({
-        region: 'ap-northeast-1',
-        credentials: {
-          accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-        },
-      }),
-    );
+    this.dynamoDBClient = new DynamoDBClient({
+      region: process.env.REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
   }
 
   ObjectToAttributeValue(obj: Record<string, string | boolean>) {
@@ -44,8 +41,8 @@ export class DynamodbService {
     return res;
   }
 
-  async SubmitCommand(command) {
-    const response = await this.dynamoDBDocClient.send(command);
+  async SubmitCommand(command: any) {
+    const response = await this.dynamoDBClient.send(command);
 
     if ('Item' in response) {
       return this.AttributeValueToString(response.Item);
