@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
 import {
+  DynamoDBClient,
   WriteRequest,
   BatchWriteItemCommand,
   AttributeValue,
@@ -10,7 +11,10 @@ import { shift } from 'types-module';
 
 @Injectable()
 export class ShiftService {
-  constructor(private dynamodbService: DynamodbService) {}
+  private dynamodbClient: DynamoDBClient;
+  constructor(private dynamodbService: DynamodbService) {
+    this.dynamodbClient = this.dynamodbService.GetClient();
+  }
   // ユーザーごとに分けた更新ができない
   WriteSchedule(shifts: shift[]) {
     const RequestItem: WriteRequest[] = shifts.map((shift) => {
@@ -38,7 +42,7 @@ export class ShiftService {
       },
     });
 
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 
   GetSchedule(st: string, fi: string) {
@@ -57,7 +61,7 @@ export class ShiftService {
       },
     });
 
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 
   GetYoursShifts(usernames: string[], st: string, fi: string) {
@@ -76,6 +80,6 @@ export class ShiftService {
       },
       ProjectionExpression: usernames.join(','),
     });
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 }

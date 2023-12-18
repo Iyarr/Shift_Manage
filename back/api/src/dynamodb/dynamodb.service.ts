@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DynamoDBClient, AttributeValue } from '@aws-sdk/client-dynamodb';
 import * as dotenv from 'dotenv';
-
 @Injectable()
 export class DynamodbService {
   private dynamoDBClient: DynamoDBClient;
@@ -41,12 +40,7 @@ export class DynamodbService {
     return res;
   }
 
-  async SubmitCommand(command: any) {
-    const response = await this.dynamoDBClient.send(command);
-
-    if ('Item' in response) {
-      return this.AttributeValueToString(response.Item);
-    }
-    return response;
+  GetClient(): DynamoDBClient {
+    return this.dynamoDBClient;
   }
 }

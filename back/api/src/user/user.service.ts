@@ -3,6 +3,7 @@ import { DynamodbService } from '../dynamodb/dynamodb.service';
 import { UpdateUserBody } from 'types-module';
 
 import {
+  DynamoDBClient,
   PutItemCommand,
   GetItemCommand,
   DeleteItemCommand,
@@ -13,14 +14,17 @@ import {
 
 @Injectable()
 export class UserService {
-  constructor(private dynamodbService: DynamodbService) {}
+  private dynamodbClient: DynamoDBClient;
+  constructor(private dynamodbService: DynamodbService) {
+    this.dynamodbClient = this.dynamodbService.GetClient();
+  }
 
   CreateUser(userItem: Record<string, string | boolean>) {
     const command = new PutItemCommand({
       TableName: 'Users',
       Item: this.dynamodbService.ObjectToAttributeValue(userItem),
     });
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 
   VerifyUser(userItem: Record<string, string>) {
@@ -38,7 +42,7 @@ export class UserService {
       },
       ProjectionExpression: 'is_admin',
     });
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 
   GetUser(id: string) {
@@ -48,7 +52,7 @@ export class UserService {
         id: { S: id },
       },
     });
-    const response = this.dynamodbService.SubmitCommand(command);
+    const response = this.dynamodbClient.send(command);
     return response;
   }
 
@@ -78,7 +82,7 @@ export class UserService {
       ExpressionAttributeValues: ExpressionAttributeValues,
       UpdateExpression: 'SET' + UpdateExpression.join(','),
     });
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 
   DeleteUser(id: string) {
@@ -88,6 +92,6 @@ export class UserService {
         id: { S: id },
       },
     });
-    return this.dynamodbService.SubmitCommand(command);
+    return this.dynamodbClient.send(command);
   }
 }
