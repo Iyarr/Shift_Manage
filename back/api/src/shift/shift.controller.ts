@@ -11,17 +11,17 @@ export class ShiftController {
     return this.shiftService.GetSchedule(param.start, param.finish);
   }
 
-  @Get('user/:username/between/:start/and/:finish')
+  @Get('user/:id/between/:start/and/:finish')
   GetYoursShifts(
     @Param()
     param: {
-      username: string;
+      id: string;
       start: string;
       finish: string;
     },
   ) {
     return this.shiftService.GetYoursShifts(
-      [param.username],
+      [param.id],
       param.start,
       param.finish,
     );

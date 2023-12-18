@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
 import {
   DynamoDBClient,
@@ -15,6 +15,7 @@ export class ShiftService {
   constructor(private dynamodbService: DynamodbService) {
     this.dynamodbClient = this.dynamodbService.GetClient();
   }
+
   // ユーザーごとに分けた更新ができない
   WriteSchedule(shifts: shift[]) {
     const RequestItem: WriteRequest[] = shifts.map((shift) => {
@@ -42,7 +43,12 @@ export class ShiftService {
       },
     });
 
-    return this.dynamodbClient.send(command);
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   GetSchedule(st: string, fi: string) {
@@ -52,7 +58,7 @@ export class ShiftService {
         '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
       ExpressionAttributeNames: {
         '#hashKey': 'ConstantKey',
-        '#sortkey': 'partition',
+        '#sortkey': 'part',
       },
       ExpressionAttributeValues: {
         ':HashValue': { S: 'ConstantValue' },
@@ -61,7 +67,12 @@ export class ShiftService {
       },
     });
 
-    return this.dynamodbClient.send(command);
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   GetYoursShifts(usernames: string[], st: string, fi: string) {
@@ -71,7 +82,7 @@ export class ShiftService {
         '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
       ExpressionAttributeNames: {
         '#hashKey': 'ConstantKey',
-        '#sortkey': 'partition',
+        '#sortkey': 'part',
       },
       ExpressionAttributeValues: {
         ':HashValue': { S: 'ConstantValue' },
@@ -80,6 +91,12 @@ export class ShiftService {
       },
       ProjectionExpression: usernames.join(','),
     });
-    return this.dynamodbClient.send(command);
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -1,0 +1,53 @@
+provider "aws" {
+  access_key = var.aws_access_key_id
+  secret_key = var.aws_secret_access_key
+  region     = var.aws_region
+}
+
+resource "aws_dynamodb_table" "users-table" {
+  name           = "Users"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 20
+  write_capacity = 20
+  hash_key       = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  attribute {
+    name = "password"
+    type = "S"
+  }
+
+  attribute {
+    name = "name"
+    type = "S"
+  }
+
+  attribute {
+    name = "is_admin"
+    type = "B"
+  }
+}
+
+resource "aws_dynamodb_table" "shift-table" {
+  name           = "Shifts"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 20
+  write_capacity = 20
+  hash_key       = "ConstantKey"
+  range_key      = "part"
+
+  attribute {
+    name = "ConstantKey"
+    type = "S"
+  }
+
+  attribute {
+    name = "part"
+    type = "S"
+  }
+
+}

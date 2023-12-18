@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Response } from 'express';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
 import { UpdateUserBody } from 'types-module';
 
@@ -24,7 +25,13 @@ export class UserService {
       TableName: 'Users',
       Item: this.dynamodbService.ObjectToAttributeValue(userItem),
     });
-    return this.dynamodbClient.send(command);
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   VerifyUser(userItem: Record<string, string>) {
@@ -42,7 +49,13 @@ export class UserService {
       },
       ProjectionExpression: 'is_admin',
     });
-    return this.dynamodbClient.send(command);
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   GetUser(id: string) {
@@ -52,8 +65,13 @@ export class UserService {
         id: { S: id },
       },
     });
-    const response = this.dynamodbClient.send(command);
-    return response;
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   UpdateUser(id: string, userItem: UpdateUserBody) {
@@ -82,7 +100,13 @@ export class UserService {
       ExpressionAttributeValues: ExpressionAttributeValues,
       UpdateExpression: 'SET' + UpdateExpression.join(','),
     });
-    return this.dynamodbClient.send(command);
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 
   DeleteUser(id: string) {
@@ -92,6 +116,12 @@ export class UserService {
         id: { S: id },
       },
     });
-    return this.dynamodbClient.send(command);
+
+    try {
+      return this.dynamodbClient.send(command);
+    } catch (error) {
+      console.error(error);
+      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+    }
   }
 }
