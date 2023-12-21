@@ -1,5 +1,4 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Response } from 'express';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
 import { UpdateUserBody } from 'types-module';
 

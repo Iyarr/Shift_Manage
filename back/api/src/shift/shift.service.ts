@@ -53,7 +53,7 @@ export class ShiftService {
 
   GetSchedule(st: string, fi: string) {
     const command = new QueryCommand({
-      TableName: 'Schedule',
+      TableName: 'Shifts',
       KeyConditionExpression:
         '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
       ExpressionAttributeNames: {
@@ -77,7 +77,7 @@ export class ShiftService {
 
   GetYoursShifts(usernames: string[], st: string, fi: string) {
     const command = new QueryCommand({
-      TableName: 'Schedule',
+      TableName: 'Shifts',
       KeyConditionExpression:
         '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
       ExpressionAttributeNames: {
