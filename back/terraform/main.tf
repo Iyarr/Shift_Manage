@@ -37,11 +37,11 @@ resource "aws_dynamodb_table" "shifts" {
   billing_mode   = "PROVISIONED"
   read_capacity  = 20
   write_capacity = 20
-  hash_key       = "ConstantKey"
+  hash_key       = "constantkey"
   range_key      = "part"
 
   attribute {
-    name = "ConstantKey"
+    name = "constantkey"
     type = "S"
   }
 
