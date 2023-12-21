@@ -4,7 +4,7 @@ provider "aws" {
   region     = var.aws_region
 }
 
-resource "aws_dynamodb_table" "users-table" {
+resource "aws_dynamodb_table" "users" {
   name           = "Users"
   billing_mode   = "PROVISIONED"
   read_capacity  = 20
@@ -32,7 +32,7 @@ resource "aws_dynamodb_table" "users-table" {
   }
 }
 
-resource "aws_dynamodb_table" "shift-table" {
+resource "aws_dynamodb_table" "shifts" {
   name           = "Shifts"
   billing_mode   = "PROVISIONED"
   read_capacity  = 20
