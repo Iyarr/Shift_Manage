@@ -15,21 +15,6 @@ resource "aws_dynamodb_table" "users" {
     name = "id"
     type = "S"
   }
-
-  attribute {
-    name = "password"
-    type = "S"
-  }
-
-  attribute {
-    name = "name"
-    type = "S"
-  }
-
-  attribute {
-    name = "is_admin"
-    type = "B"
-  }
 }
 
 resource "aws_dynamodb_table" "shifts" {
