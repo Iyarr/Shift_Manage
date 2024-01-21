@@ -41,12 +41,10 @@
 
 ```json
 {
-  "week": [
+  "metadata": [
     {
-      "part": "String",
-      "name1": true,
-      "name2": true,
-      "name3": true
+      "part": "string",
+      "names": ["name1", "name2", "name3"]
     }
   ]
 }
@@ -66,7 +64,7 @@
 
 ```json
 {
-  "update": [
+  "metadata": [
     {
       "part": "string",
       "names": ["name1", "name2", "name3"]
