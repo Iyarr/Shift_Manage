@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
-import { UpdateUserBody } from 'types-module';
+import { UpdateUserBody, res } from 'types-module';
 
 import {
   DynamoDBClient,
@@ -19,21 +19,31 @@ export class UserService {
     this.dynamodbClient = this.dynamodbService.GetClient();
   }
 
-  CreateUser(userItem: Record<string, string | boolean>) {
+  async CreateUser(userItem: Record<string, string | boolean>) {
     const command = new PutItemCommand({
       TableName: 'Users',
       Item: this.dynamodbService.ObjectToAttributeValue(userItem),
     });
 
+    const res: res = {
+      status: 0,
+      message: '',
+    };
+
     try {
-      return this.dynamodbClient.send(command);
+      await this.dynamodbClient.send(command);
+      res.status = 200;
+      res.message = 'Created!';
     } catch (error) {
       console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+      res.status = 400;
+      res.message = 'Bad Reaquest';
     }
+
+    return res;
   }
 
-  VerifyUser(userItem: Record<string, string>) {
+  async VerifyUser(userItem: Record<string, string>) {
     const command = new QueryCommand({
       TableName: 'Users',
       KeyConditionExpression: '#hashKey = :HashValue',
@@ -43,21 +53,36 @@ export class UserService {
       },
       FilterExpression: '#password = :PassValue',
       ExpressionAttributeValues: {
-        ':HashValue': { S: userItem.name },
+        ':HashValue': { S: userItem.id },
         ':PassValue': { S: userItem.password },
       },
       ProjectionExpression: 'is_admin',
     });
 
+    const res: res = {
+      status: 0,
+      message: '',
+    };
+
     try {
-      return this.dynamodbClient.send(command);
+      const output = await this.dynamodbClient.send(command);
+      if (output.Count == 1) {
+        res.status = 200;
+        res.message = 'Verified!';
+      } else {
+        res.status = 404;
+        res.message = 'Authentication Failed';
+      }
     } catch (error) {
       console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+      res.status = 400;
+      res.message = 'Bad Reaquest';
     }
+
+    return res;
   }
 
-  GetUser(id: string) {
+  async GetUser(id: string) {
     const command = new GetItemCommand({
       TableName: 'Users',
       Key: {
@@ -65,15 +90,26 @@ export class UserService {
       },
     });
 
+    const res: res = {
+      status: 0,
+      message: '',
+    };
+
     try {
-      return this.dynamodbClient.send(command);
+      const output = await this.dynamodbClient.send(command);
+      res.status = 200;
+      res.message = 'GET request successful';
+      res.data = this.dynamodbService.AttributeValueToString(output.Item);
     } catch (error) {
       console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+      res.status = 400;
+      res.message = 'Bad Reaquest';
     }
+
+    return res;
   }
 
-  UpdateUser(id: string, userItem: UpdateUserBody) {
+  async UpdateUser(id: string, userItem: UpdateUserBody) {
     const ExpressionAttributeNames: Record<string, string> = {};
     const ExpressionAttributeValues: Record<string, AttributeValue> = {};
     const UpdateExpression: string[] = [];
@@ -100,15 +136,25 @@ export class UserService {
       UpdateExpression: 'SET' + UpdateExpression.join(','),
     });
 
+    const res: res = {
+      status: 0,
+      message: '',
+    };
+
     try {
-      return this.dynamodbClient.send(command);
+      await this.dynamodbClient.send(command);
+      res.status = 200;
+      res.message = 'Updated!';
     } catch (error) {
       console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+      res.status = 400;
+      res.message = 'Bad Reaquest';
     }
+
+    return res;
   }
 
-  DeleteUser(id: string) {
+  async DeleteUser(id: string) {
     const command = new DeleteItemCommand({
       TableName: 'Users',
       Key: {
@@ -116,11 +162,21 @@ export class UserService {
       },
     });
 
+    const res: res = {
+      status: 0,
+      message: '',
+    };
+
     try {
-      return this.dynamodbClient.send(command);
+      await this.dynamodbClient.send(command);
+      res.status = 200;
+      res.message = 'Deleted!';
     } catch (error) {
       console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
+      res.status = 400;
+      res.message = 'Bad Reaquest';
     }
+
+    return res;
   }
 }

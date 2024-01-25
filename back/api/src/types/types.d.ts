@@ -10,7 +10,7 @@ declare module 'types-module' {
     is_admin?: boolean;
   };
 
-  type NewUserData = {
+  type UserItem = {
     id: string;
     password: string;
     name: string;
@@ -21,5 +21,11 @@ declare module 'types-module' {
     part: string;
     user_ids: string[];
     delete: boolean;
+  };
+
+  type res = {
+    status: number;
+    message: string;
+    data?: Record<string, string | boolean>;
   };
 }
