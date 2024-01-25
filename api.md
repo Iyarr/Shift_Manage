@@ -1,25 +1,25 @@
 # api の設計
 
 - [api の設計](#api-の設計)
-  - [1. シフト\[/shift\]](#1-シフトshift)
-    - [1.1 GET `/between/{start}/and/{finish}`](#11-get-betweenstartandfinish)
+  - [1. シフト](#1-シフト)
+    - [1.1 GET `/shifts/between/{start}/and/{finish}`](#11-get-shiftsbetweenstartandfinish)
       - [レスポンス](#レスポンス)
-    - [1.2 Post `/update`](#12-post-update)
+    - [1.2 Post `/shifts`](#12-post-shifts)
       - [リクエスト](#リクエスト)
       - [レスポンス](#レスポンス-1)
-  - [2. ユーザー \[/user\]](#2-ユーザー-user)
-    - [2.1 POST `/create`](#21-post-create)
+  - [2. ユーザー](#2-ユーザー)
+    - [2.1 POST `/users`](#21-post-users)
       - [リクエスト](#リクエスト-1)
       - [レスポンス](#レスポンス-2)
-    - [2.2 GET `/{name}`](#22-get-name)
+    - [2.2 GET `/user/{name}`](#22-get-username)
       - [レスポンス](#レスポンス-3)
-    - [2.3 POST `/login`](#23-post-login)
+    - [2.3 POST `/user`](#23-post-user)
       - [リクエスト](#リクエスト-2)
       - [レスポンス](#レスポンス-4)
-    - [2.4 PUT `/update/{username}`](#24-put-updateusername)
+    - [2.4 PUT `/user/{username}`](#24-put-userusername)
       - [リクエスト](#リクエスト-3)
       - [レスポンス](#レスポンス-5)
-    - [2.5 DELETE `/{name}`](#25-delete-name)
+    - [2.5 DELETE `/user/{name}`](#25-delete-username)
       - [レスポンス](#レスポンス-6)
   - [テストの実行](#テストの実行)
     - [テストするデータ](#テストするデータ)
@@ -28,9 +28,9 @@
   - [テスト用データの作成](#テスト用データの作成)
     - [使用するユーザー](#使用するユーザー)
 
-## 1. シフト[/shift]
+## 1. シフト
 
-### 1.1 GET `/between/{start}/and/{finish}`
+### 1.1 GET `/shifts/between/{start}/and/{finish}`
 
 > - start：最初のコマ
 > - finish：最後のコマ
@@ -44,7 +44,7 @@
   {
     "part": "string",
     "names": ["name1", "name2", "name3"]
-  },
+  }
 ]
 ```
 
@@ -54,7 +54,7 @@
 - 400: リクエストデータが無効です
 - 404: データが見つかりません
 
-### 1.2 Post `/update`
+### 1.2 Post `/shifts`
 
 指定したコマの内容を更新する
 
@@ -63,9 +63,9 @@
 ```json
 [
   {
-      "part": "string",
-      "names": ["name1", "name2", "name3"]
-  },
+    "part": "string",
+    "names": ["name1", "name2", "name3"]
+  }
 ]
 ```
 
@@ -76,9 +76,11 @@
 - 200: データを更新できました
 - 400: リクエストデータが無効です
 
-## 2. ユーザー [/user]
+## 2. ユーザー
 
-### 2.1 POST `/create`
+### 2.1 POST `/users`
+
+ユーザーを作成する
 
 #### リクエスト
 
@@ -93,10 +95,10 @@
 
 #### レスポンス
 
-- 200: データを更新できました
+- 201: データを更新できました
 - 400: リクエストデータが無効です
 
-### 2.2 GET `/{name}`
+### 2.2 GET `/user/{name}`
 
 指定したユーザーの内容を取得する
 
@@ -114,7 +116,7 @@
 - 400: リクエストデータが無効です
 - 404: データが見つかりません
 
-### 2.3 POST `/login`
+### 2.3 POST `/user`
 
 ログイン認証
 
@@ -133,7 +135,7 @@
 - 400: リクエストデータが無効です
 - 404: 認証に失敗しました
 
-### 2.4 PUT `/update/{username}`
+### 2.4 PUT `/user/{username}`
 
 個人データ更新
 
@@ -152,7 +154,7 @@
 - 200: データを更新できました
 - 400: リクエストデータが無効です
 
-### 2.5 DELETE `/{name}`
+### 2.5 DELETE `/user/{name}`
 
 #### レスポンス
 
