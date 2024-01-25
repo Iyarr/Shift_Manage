@@ -16,8 +16,49 @@ export class ShiftService {
     this.dynamodbClient = this.dynamodbService.GetClient();
   }
 
+  async GetSchedule(st: string, fi: string) {
+    const command = new QueryCommand({
+      TableName: 'Shifts',
+      KeyConditionExpression:
+        '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
+      ExpressionAttributeNames: {
+        '#hashKey': 'ConstantKey',
+        '#sortkey': 'part',
+      },
+      ExpressionAttributeValues: {
+        ':HashValue': { S: 'ConstantValue' },
+        ':St': { S: st },
+        ':Fi': { S: fi },
+      },
+    });
+
+    const res = await this.dynamodbClient.send(command);
+    return res;
+  }
+
+  async GetYoursShifts(usernames: string[], st: string, fi: string) {
+    const command = new QueryCommand({
+      TableName: 'Shifts',
+      KeyConditionExpression:
+        '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
+      ExpressionAttributeNames: {
+        '#hashKey': 'ConstantKey',
+        '#sortkey': 'part',
+      },
+      ExpressionAttributeValues: {
+        ':HashValue': { S: 'ConstantValue' },
+        ':St': { S: st },
+        ':Fi': { S: fi },
+      },
+      ProjectionExpression: usernames.join(','),
+    });
+
+    const res = await this.dynamodbClient.send(command);
+    return res;
+  }
+
   // ユーザーごとに分けた更新ができない
-  WriteSchedule(shifts: shift[]) {
+  async WriteSchedule(shifts: shift[]) {
     const RequestItem: WriteRequest[] = shifts.map((shift) => {
       const item: Record<string, AttributeValue> = {
         ConstantKey: { S: 'ConstantValue' },
@@ -43,60 +84,7 @@ export class ShiftService {
       },
     });
 
-    try {
-      return this.dynamodbClient.send(command);
-    } catch (error) {
-      console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  GetSchedule(st: string, fi: string) {
-    const command = new QueryCommand({
-      TableName: 'Shifts',
-      KeyConditionExpression:
-        '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
-      ExpressionAttributeNames: {
-        '#hashKey': 'ConstantKey',
-        '#sortkey': 'part',
-      },
-      ExpressionAttributeValues: {
-        ':HashValue': { S: 'ConstantValue' },
-        ':St': { S: st },
-        ':Fi': { S: fi },
-      },
-    });
-
-    try {
-      return this.dynamodbClient.send(command);
-    } catch (error) {
-      console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  GetYoursShifts(usernames: string[], st: string, fi: string) {
-    const command = new QueryCommand({
-      TableName: 'Shifts',
-      KeyConditionExpression:
-        '#hashKey = :HashValue AND #sortkey BETWEEN :St AND :Fi',
-      ExpressionAttributeNames: {
-        '#hashKey': 'ConstantKey',
-        '#sortkey': 'part',
-      },
-      ExpressionAttributeValues: {
-        ':HashValue': { S: 'ConstantValue' },
-        ':St': { S: st },
-        ':Fi': { S: fi },
-      },
-      ProjectionExpression: usernames.join(','),
-    });
-
-    try {
-      return this.dynamodbClient.send(command);
-    } catch (error) {
-      console.error(error);
-      return new HttpException('Bad Reaquest', HttpStatus.BAD_REQUEST);
-    }
+    const res = await this.dynamodbClient.send(command);
+    return res;
   }
 }
