@@ -40,14 +40,12 @@
 #### レスポンス
 
 ```json
-{
-  "metadata": [
-    {
-      "part": "string",
-      "names": ["name1", "name2", "name3"]
-    }
-  ]
-}
+[
+  {
+    "part": "string",
+    "names": ["name1", "name2", "name3"]
+  },
+]
 ```
 
 > それぞれの name に対する値は一つの boolean 型になっているが、name が定義される個数はそれぞれ変わる
@@ -63,14 +61,12 @@
 #### リクエスト
 
 ```json
-{
-  "metadata": [
-    {
+[
+  {
       "part": "string",
       "names": ["name1", "name2", "name3"]
-    }
-  ]
-}
+  },
+]
 ```
 
 > シフトのコマごとのデータを全て上書きするので、指定されていない担当者は削除される

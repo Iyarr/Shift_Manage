@@ -7,6 +7,9 @@ import {
   Param,
   Body,
   Res,
+  HttpException,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from './user.service';
@@ -17,27 +20,66 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('create')
-  Create(@Body() body: Record<string, string>) {
-    return this.userService.CreateUser(body);
-  }
-
-  @Get(':id')
-  Get(@Param('id') id: string, @Res() res: Response) {
-    return res.json(this.userService.GetUser(id));
+  @HttpCode(201)
+  async Create(@Body() body: Record<string, string>) {
+    try {
+      await this.userService.CreateUser(body);
+      return { message: 'Created' };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error Message', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Post('login')
-  Login(@Body() body: Record<string, string>) {
-    return this.userService.VerifyUser(body);
+  @HttpCode(200)
+  async Login(@Body() body: Record<string, string>) {
+    try {
+      const res = await this.userService.VerifyUser(body);
+      if (res.Count == 1) {
+        return { message: 'Login successful' };
+      } else {
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      }
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error Message', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Get(':id')
+  @HttpCode(200)
+  async Get(@Param('id') id: string, @Res() res: Response) {
+    try {
+      const res = await this.userService.GetUser(id);
+      return res;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error Message', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Put('update/:id')
-  Update(@Param('id') id: string, @Body() body: UpdateUserBody) {
-    return this.userService.UpdateUser(id, body);
+  @HttpCode(200)
+  async Update(@Param('id') id: string, @Body() body: UpdateUserBody) {
+    try {
+      await this.userService.UpdateUser(id, body);
+      return { message: 'Updated' };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error Message', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Delete(':id')
-  Delete(@Param('id') id: string) {
-    return this.userService.DeleteUser(id);
+  @HttpCode(200)
+  async Delete(@Param('id') id: string) {
+    try {
+      await this.userService.DeleteUser(id);
+      return { message: 'Deleted' };
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Error Message', HttpStatus.BAD_REQUEST);
+    }
   }
 }

@@ -1,6 +1,6 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DynamodbService } from '../dynamodb/dynamodb.service';
-import { UpdateUserBody, res } from 'types-module';
+import { UpdateUserBody } from 'types-module';
 
 import {
   DynamoDBClient,
@@ -25,22 +25,7 @@ export class UserService {
       Item: this.dynamodbService.ObjectToAttributeValue(userItem),
     });
 
-    const res: res = {
-      status: 0,
-      message: '',
-    };
-
-    try {
-      await this.dynamodbClient.send(command);
-      res.status = 200;
-      res.message = 'Created!';
-    } catch (error) {
-      console.error(error);
-      res.status = 400;
-      res.message = 'Bad Reaquest';
-    }
-
-    return res;
+    return await this.dynamodbClient.send(command);
   }
 
   async VerifyUser(userItem: Record<string, string>) {
@@ -59,26 +44,7 @@ export class UserService {
       ProjectionExpression: 'is_admin',
     });
 
-    const res: res = {
-      status: 0,
-      message: '',
-    };
-
-    try {
-      const output = await this.dynamodbClient.send(command);
-      if (output.Count == 1) {
-        res.status = 200;
-        res.message = 'Verified!';
-      } else {
-        res.status = 404;
-        res.message = 'Authentication Failed';
-      }
-    } catch (error) {
-      console.error(error);
-      res.status = 400;
-      res.message = 'Bad Reaquest';
-    }
-
+    const res = await this.dynamodbClient.send(command);
     return res;
   }
 
@@ -90,23 +56,8 @@ export class UserService {
       },
     });
 
-    const res: res = {
-      status: 0,
-      message: '',
-    };
-
-    try {
-      const output = await this.dynamodbClient.send(command);
-      res.status = 200;
-      res.message = 'GET request successful';
-      res.data = this.dynamodbService.AttributeValueToString(output.Item);
-    } catch (error) {
-      console.error(error);
-      res.status = 400;
-      res.message = 'Bad Reaquest';
-    }
-
-    return res;
+    const res = await this.dynamodbClient.send(command);
+    return this.dynamodbService.AttributeValueToString(res.Item);
   }
 
   async UpdateUser(id: string, userItem: UpdateUserBody) {
@@ -136,21 +87,7 @@ export class UserService {
       UpdateExpression: 'SET' + UpdateExpression.join(','),
     });
 
-    const res: res = {
-      status: 0,
-      message: '',
-    };
-
-    try {
-      await this.dynamodbClient.send(command);
-      res.status = 200;
-      res.message = 'Updated!';
-    } catch (error) {
-      console.error(error);
-      res.status = 400;
-      res.message = 'Bad Reaquest';
-    }
-
+    const res = await this.dynamodbClient.send(command);
     return res;
   }
 
@@ -162,21 +99,7 @@ export class UserService {
       },
     });
 
-    const res: res = {
-      status: 0,
-      message: '',
-    };
-
-    try {
-      await this.dynamodbClient.send(command);
-      res.status = 200;
-      res.message = 'Deleted!';
-    } catch (error) {
-      console.error(error);
-      res.status = 400;
-      res.message = 'Bad Reaquest';
-    }
-
+    const res = await this.dynamodbClient.send(command);
     return res;
   }
 }
